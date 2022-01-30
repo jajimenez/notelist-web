@@ -5,18 +5,19 @@
                 <h5 class="modal-title" id="newNotebookDialogTitle">New notebook</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+            <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+                <div class="modal-body">
                     <div class="form-floating">
-                        <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" required ngModel>
+                        <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" required ngModel (input)="onNameInput(form)">
                         <label for="nameInput">Name</label>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Accept</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
+                    <div *ngIf="exists" id="newNotebookExists" class="alert alert-danger">Another notebook with the same name already exists</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="!form.valid || exists">Accept</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
