@@ -1,0 +1,31 @@
+<div class="modal fade" id="manageNotebooksDialog" data-bs-backdrop="static" tabindex="-1" aria-labelledby="manageNotebooksDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="manageNotebooksDialogTitle">Manage notebooks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div *ngIf="notebooks.length > 0" class="list-group">
+                <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action notebook" (click)="toggleChecked($event, n.id)">
+                    <input type="checkbox" class="form-check-input checkbox" id="{{ 'checkbox_' + n.id }}" value="">
+                    {{ n.name }}
+                </a>
+            </div>
+            <div *ngIf="notebooks.length == 0">There are no notebooks</div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-secondary option" data-bs-toggle="modal" data-bs-target="#newNotebookDialog">
+                        <i class="bi-plus-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary option" [disabled]="checkedNotebooks.length !== 1">
+                        <i class="bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary option" [disabled]="checkedNotebooks.length === 0">
+                        <i class="bi-trash"></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

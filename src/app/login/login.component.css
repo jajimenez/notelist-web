@@ -1,0 +1,24 @@
+.container-fluid {
+    background-color: #f3f2ef;
+    height: calc(100vh);
+}
+
+#logo {
+    margin-right: 20px;
+    width: 64px;
+    height: 64px;
+}
+
+#title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 3em;
+}
+
+#description {
+    margin-bottom: 50px;
+}
+
+#errorMessage {
+    width: 312px
+}

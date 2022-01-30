@@ -1,0 +1,22 @@
+<div class="modal fade" id="newNotebookDialog" data-bs-backdrop="static" tabindex="-1" aria-labelledby="newNotebookDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newNotebookDialogTitle">New notebook</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+                    <div class="form-floating">
+                        <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" required ngModel>
+                        <label for="nameInput">Name</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Accept</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

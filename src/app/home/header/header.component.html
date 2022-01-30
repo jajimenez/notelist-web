@@ -1,0 +1,57 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-secondary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Notelist</a>
+        <button class="navbar-toggler" type="button" aria-controls="menuOptions" aria-expanded="false" aria-label="Toggle menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="menuOptions">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item me-2">
+                    <button class="btn btn-outline-light" type="button" data-bs-toggle="modal" data-bs-target="#selectNotebookDialog">
+                        <i class="bi-journal-text"></i> {{ getNotebookButtonTitle() }}
+                    </button>
+                </li>
+                <li class="nav-item me-2">
+                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                        <i class="bi-filter"></i>
+                    </button>
+                </li>
+                <li class="nav-item me-4">
+                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                        <i class="bi-sort-down"></i>
+                    </button>
+                </li>
+                <li class="nav-item me-4">
+                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                        <i class="bi-plus-lg"></i> New note
+                    </button>
+                </li>
+                <li class="nav-item me-2">
+                    <div class="input-group">
+                        <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" [(ngModel)]="search" [disabled]="currentNotebook === null">
+                        <button class="btn btn-outline-light" type="submit" [disabled]="search.trim() === ''" [disabled]="currentNotebook === null">
+                            <i class="bi-search"></i>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav" *ngIf="user">
+                <li class="navbar-item dropdown">
+                    <a class="nav-link dropdown-toggle active" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi-person-fill"></i>
+                        {{ user.name ? user.name : user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#"><i class="bi-journal-text"></i> Manage notebooks</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi-gear me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" (click)="logout()"><i class="bi-box-arrow-in-right me-2"></i>Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<app-select-notebook-dialog></app-select-notebook-dialog>
+<app-manage-notebooks-dialog></app-manage-notebooks-dialog>
+<app-new-notebook-dialog></app-new-notebook-dialog>

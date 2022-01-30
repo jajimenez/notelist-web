@@ -1,0 +1,12 @@
+.notebook {
+    cursor: pointer;
+}
+
+.checkbox {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.option {
+    margin-right: 8px;
+}
