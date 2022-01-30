@@ -10,3 +10,8 @@
 .option {
     margin-right: 8px;
 }
+
+#manageNotebooksNoNotebooks {
+    margin-bottom: 0px;
+    padding: 8px;
+}

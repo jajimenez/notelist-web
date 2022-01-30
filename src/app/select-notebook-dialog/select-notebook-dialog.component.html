@@ -5,10 +5,14 @@
                 <h5 class="modal-title" id="selectNotebookDialogTitle">Select notebook</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div *ngIf="notebooks.length > 0" class="list-group">
-                <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action" href="#">{{ n.name }}</a>
+            <div class="modal-body">
+                <div *ngIf="notebooks.length > 0" class="list-group">
+                    <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action" href="#">{{ n.name }}</a>
+                </div>
+                <div *ngIf="notebooks.length == 0" id="selectNotebookDialogNoNotebooks" class="alert alert-warning">There are no notebooks</div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#manageNotebooksDialog">Manage notebooks</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
