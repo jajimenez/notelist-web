@@ -24,20 +24,20 @@ export class HeaderComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.userService.user.subscribe(
-            (u: User | null) => this.user = u,
-            (e: string) => console.error(e)
-        );
+        this.userService.user.subscribe({
+            next: (u: User | null) => this.user = u,
+            error: (e: string) => console.error(e)
+        });
 
-        this.notebookService.notebooks.subscribe(
-            (n: Notebook[]) => this.notebooks = n,
-            (e: string) => console.error(e)
-        );
+        this.notebookService.notebooks.subscribe({
+            next: (n: Notebook[]) => this.notebooks = n,
+            error: (e: string) => console.error(e)
+        });
 
-        this.notebookService.currentNotebook.subscribe(
-            (n: Notebook | null) => this.currentNotebook = n,
-            (e: String) => console.error(e)
-        )
+        this.notebookService.currentNotebook.subscribe({
+            next: (n: Notebook | null) => this.currentNotebook = n,
+            error: (e: String) => console.error(e)
+        });
     }
 
     getNotebookButtonTitle() {

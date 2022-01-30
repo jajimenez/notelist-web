@@ -38,13 +38,12 @@ export class NotebookService {
                     const url = environment.notelist_api_url + "/notebooks/notebooks";
                     const request = this.http.get<NotebookListResponseData>(url);
 
-                    request.subscribe(
-                        (d: NotebookListResponseData) => this.notebooks.next(d.result.map(
+                    request.subscribe({
+                        next: (d: NotebookListResponseData) => this.notebooks.next(d.result.map(
                             (x) => new Notebook(x.id, x.name, x.created_ts, x.last_modified_ts)
                         )),
-
-                        (e: any) => this.authService.handleError(request, e)
-                    );
+                        error: (e: any) => this.authService.handleError(request, e)
+                    });
                 } else {
                     // If the current value of "authUser" is "null", it means no user is logged in
                     this.notebooks.next([]);

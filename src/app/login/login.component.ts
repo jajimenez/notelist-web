@@ -27,14 +27,14 @@ export class LoginComponent implements OnInit {
         const username = form.value.username;
         const password = form.value.password;
 
-        this.authService.login(username, password).subscribe(
-            (u: AuthUser) => {
+        this.authService.login(username, password).subscribe({
+            next: (u: AuthUser) => {
                 this.waiting = false;
             },
-            (e: string) => {
+            error: (e: string) => {
                 this.waiting = false;
                 this.error = e;
             }
-        )
+        })
     }
 }

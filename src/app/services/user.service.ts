@@ -39,8 +39,8 @@ export class UserService {
                     const url = environment.notelist_api_url + "/users/user/" + u.user_id;
                     const request = this.http.get<UserResponseData>(url);
 
-                    request.subscribe(
-                        (d: UserResponseData) => this.user.next(new User(
+                    request.subscribe({
+                        next: (d: UserResponseData) => this.user.next(new User(
                             d.result.id,
                             d.result.username,
                             d.result.admin,
@@ -50,9 +50,8 @@ export class UserService {
                             d.result.created_ts,
                             d.result.last_modified_ts
                         )),
-
-                        (e: any) => this.authService.handleError(request, e)
-                    )
+                        error: (e: any) => this.authService.handleError(request, e)
+                    })
                 } else {
                     // If the current value of "authUser" is "null", it means no user is logged in
                     this.user.next(null);
