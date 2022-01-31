@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { NotePreview } from "./note.model";
+
+import { NotebookService } from "src/app/services/notebook.service";
+import { NotePreview } from "src/app/models/note.model";
 
 @Component({
     selector: "app-note-list",
@@ -9,7 +11,7 @@ import { NotePreview } from "./note.model";
 export class NoteListComponent implements OnInit {
     notes: NotePreview[] = [];
 
-    constructor() { }
+    constructor(private notebookService: NotebookService) { }
 
     ngOnInit(): void {
     }

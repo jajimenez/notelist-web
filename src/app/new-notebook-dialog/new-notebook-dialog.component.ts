@@ -31,10 +31,8 @@ export class NewNotebookDialogComponent implements OnInit {
 
     onSubmit(form: NgForm) {
         if (!form.valid) return;
-        const name = form.value.name;
 
-        this.notebookService.create(name).subscribe({
-            error: (e: string) => console.error(e)
-        })
+        const name = form.value.name;
+        this.notebookService.createNotebook(name);
     }
 }
