@@ -14,5 +14,9 @@ export class NoteListComponent implements OnInit {
     constructor(private notebookService: NotebookService) { }
 
     ngOnInit(): void {
+        this.notebookService.currentNotebookNotes.subscribe({
+            next: (notes: NotePreview[]) => this.notes = notes,
+            error: (e: string) => console.error(e)
+        });
     }
 }
