@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Params } from "@angular/router";
 
-import { NotebookService } from "src/app/services/notebook.service";
+import { NoteService } from "src/app/services/note.service";
 import { NotePreview } from "src/app/models/note.model";
 
 @Component({
@@ -11,12 +12,18 @@ import { NotePreview } from "src/app/models/note.model";
 export class NoteListComponent implements OnInit {
     notes: NotePreview[] = [];
 
-    constructor(private notebookService: NotebookService) { }
+    constructor(private route: ActivatedRoute, private noteService: NoteService) { }
 
     ngOnInit(): void {
-        this.notebookService.currentNotebookNotes.subscribe({
-            next: (notes: NotePreview[]) => this.notes = notes,
-            error: (e: string) => console.error(e)
+        this.route.params.subscribe({
+            next: (params: Params) => {
+                const notebook_id = params["notebook_id"];
+
+                this.noteService.getNotes(notebook_id).subscribe({
+                    next: (notes: NotePreview[]) => this.notes = notes,
+                    error: (e: string) => console.log(e)
+                });
+            }
         });
     }
 }

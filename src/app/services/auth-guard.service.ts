@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { take, map } from "rxjs/operators";
 
 import { AuthService } from "./auth.service";
-import { AuthUser } from "../models/auth-user.model";
+import { AuthUser } from "src/app/models/auth-user.model";
 
 @Injectable({providedIn: "root"})
 export class AuthGuardService implements CanActivate {
@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivate {
             take(1),
             map((u: AuthUser | null) => {
                 if (u === null && !state.url.endsWith("/login")) return this.router.createUrlTree(["/login"]);
-                if (u !== null && state.url.endsWith("/login")) return this.router.createUrlTree(["/"]);
+                if (u !== null && state.url.endsWith("/login")) return this.router.createUrlTree(["/notebooks"]);
 
                 return true;
             })

@@ -1,8 +1,8 @@
-<div class="card">
+<div *ngIf="note" class="card">
     <div class="card-header">
         <div class="row align-items-center">
             <div class="col-md-11">
-                Note title
+                {{ note.title }}
             </div>
             <div class="col-md-1">
                 <button type="button" class="btn-close float-end" aria-label="Close"></button>
@@ -10,6 +10,6 @@
         </div>
     </div>
     <div class="card-body">
-        Note body
+        {{ note.body }}
     </div>
 </div>

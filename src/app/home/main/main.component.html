@@ -1,3 +1,4 @@
+<app-header [user]="user" [notebooks]="notebooks" [currentNotebook]="currentNotebook"></app-header>
 <div id="root">
     <div class="d-flex flex-column align-items-stretch flex-shrink-0" id="sidebar">
         <div id="sidebar-main">
@@ -5,6 +6,6 @@
         </div>
     </div>
     <div id="main">
-        <app-note-view></app-note-view>
+        <router-outlet></router-outlet>
     </div>
 </div>

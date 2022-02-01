@@ -8,24 +8,24 @@ import { AuthInterceptorService } from "./services/auth-interceptor.service";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login/login.component";
 import { HomeComponent } from "./home/home.component";
-import { HeaderComponent } from "./home/header/header.component";
 import { MainComponent } from "./home/main/main.component";
+import { HeaderComponent } from "./home/main/header/header.component";
 import { NoteListComponent } from "./home/main/note-list/note-list.component";
 import { NoteViewComponent } from "./home/main/note-view/note-view.component";
 import { NoteEditComponent } from "./home/main/note-edit/note-edit.component";
 import { NoteItemComponent } from "./home/main/note-list/note-item/note-item.component";
 import { DialogComponent } from './dialog/dialog.component';
-import { SelectNotebookDialogComponent } from './select-notebook-dialog/select-notebook-dialog.component';
-import { ManageNotebooksDialogComponent } from './manage-notebooks-dialog/manage-notebooks-dialog.component';
-import { NewNotebookDialogComponent } from './new-notebook-dialog/new-notebook-dialog.component';
+import { SelectNotebookDialogComponent } from './home/main/select-notebook-dialog/select-notebook-dialog.component';
+import { ManageNotebooksDialogComponent } from './home/main/manage-notebooks-dialog/manage-notebooks-dialog.component';
+import { NewNotebookDialogComponent } from './home/main/new-notebook-dialog/new-notebook-dialog.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
         HomeComponent,
-        HeaderComponent,
         MainComponent,
+        HeaderComponent,
         NoteListComponent,
         NoteViewComponent,
         NoteEditComponent,

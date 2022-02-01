@@ -14,7 +14,7 @@ export class SelectNotebookDialogComponent implements OnInit {
     constructor(private notebookService: NotebookService) { }
 
     ngOnInit(): void {
-        this.notebookService.notebooks.subscribe({
+        this.notebookService.getNotebooks().subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks,
             error: (e: string) => console.error(e)
         });

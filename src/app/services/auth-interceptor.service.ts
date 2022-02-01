@@ -3,7 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpHeaders, HttpEvent } fro
 import { Observable } from "rxjs";
 import { take, exhaustMap } from "rxjs/operators";
 
-import { AuthUser } from "../models/auth-user.model";
+import { AuthUser } from "src/app/models/auth-user.model";
 import { AuthService } from "./auth.service";
 
 @Injectable()

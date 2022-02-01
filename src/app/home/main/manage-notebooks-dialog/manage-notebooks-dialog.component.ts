@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
@@ -15,8 +15,8 @@ export class ManageNotebooksDialogComponent implements OnInit {
     constructor(private notebookService: NotebookService) { }
 
     ngOnInit(): void {
-        this.notebookService.notebooks.subscribe({
-            next: (n: Notebook[]) => this.notebooks = n,
+        this.notebookService.getNotebooks().subscribe({
+            next: (notebooks: Notebook[]) => this.notebooks = notebooks,
             error: (e: string) => console.error(e)
         });
     }

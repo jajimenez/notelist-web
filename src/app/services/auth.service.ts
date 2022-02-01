@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject, throwError } from "rxjs"
 import { take, map, exhaustMap, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
-import { AuthUser } from "../models/auth-user.model";
+import { AuthUser } from "src/app/models/auth-user.model";
 
 interface LoginResponseData {
     message: string,
