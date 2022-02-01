@@ -19,10 +19,12 @@ export class NoteListComponent implements OnInit {
             next: (params: Params) => {
                 const notebook_id = params["notebook_id"];
 
-                this.noteService.getNotes(notebook_id).subscribe({
-                    next: (notes: NotePreview[]) => this.notes = notes,
-                    error: (e: string) => console.log(e)
-                });
+                if (notebook_id) {
+                    this.noteService.getNotes(notebook_id).subscribe({
+                        next: (notes: NotePreview[]) => this.notes = notes,
+                        error: (e: string) => console.log(e)
+                    });
+                }
             }
         });
     }
