@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
     currentNotebook: Notebook | undefined = undefined;
 
     constructor(
-        private route: ActivatedRoute,
+        private actRoute: ActivatedRoute,
         private userService: UserService,
         private notebookService: NotebookService) {
     }
@@ -27,13 +27,12 @@ export class MainComponent implements OnInit {
             next: (u: User | null ) => {
                 this.user = u;
 
-                this.route.params.subscribe({
+                this.actRoute.params.subscribe({
                     next: (params: Params) => {
                         this.notebookService.getNotebooks().subscribe({
                             next: (notebooks: Notebook[]) => {
                                 this.notebooks = notebooks;
                                 const notebook_id = params["notebook_id"];
-                                console.log(notebook_id);
 
                                 if (notebook_id) this.currentNotebook = this.notebooks.find(
                                     (n: Notebook) => n.id == notebook_id
