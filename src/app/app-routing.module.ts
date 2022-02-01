@@ -15,7 +15,7 @@ const routes: Routes = [
         path: "notebooks", component: HomeComponent, canActivate: [AuthGuardService],
         children: [
             {
-                path: "", pathMatch: "full", data: {"redirect": true}, component: HomeComponent,
+                path: "", pathMatch: "full", data: {"redirect": true}, component: HomeComponent
             },
             {
                 path: ":notebook_id", component: MainComponent, 

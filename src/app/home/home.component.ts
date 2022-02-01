@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute, Params, Route, Data } from "@angular/router";
+import { Router, ActivatedRoute, Data } from "@angular/router";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
