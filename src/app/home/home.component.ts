@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, Params, Route, Data } from "@angular/router";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
@@ -14,13 +14,19 @@ export class HomeComponent implements OnInit {
         private router: Router,
         private actRoute: ActivatedRoute,
         private notebookService: NotebookService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
-        this.notebookService.getNotebooks().subscribe({
-            next: (notebooks: Notebook[]) => {
-                if (notebooks.length > 0) {
-                    this.router.navigate([notebooks[0].id], {relativeTo: this.actRoute});
+        this.actRoute.data.subscribe({
+            next: (d: Data) => {
+                if (d["redirect"]) {
+                    this.notebookService.getNotebooks().subscribe({
+                        next: (notebooks: Notebook[]) => {
+                            if (notebooks.length > 0) {
+                                this.router.navigate([notebooks[0].id], {relativeTo: this.actRoute});
+                            }
+                        }
+                    });
                 }
             }
         })
