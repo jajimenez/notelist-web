@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 
 import { AuthService } from "src/app/services/auth.service";
 import { UserService } from "src/app/services/user.service";
@@ -13,7 +14,11 @@ import { Notebook } from "src/app/models/notebook.model";
     styleUrls: ["./header.component.css"]
 })
 
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+    userSub: Subscription | null = null;
+    notebooksSub: Subscription | null = null;
+    currentNotebookSub: Subscription | null = null;
+
     search = "";
     user: User | null = null;
     notebooks: Notebook[] = [];
@@ -27,15 +32,15 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userService.user.subscribe({
+        this.userSub = this.userService.user.subscribe({
             next: (user: User | null) => this.user = user
         });
 
-        this.notebookService.notebooks.subscribe({
+        this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks
         });
 
-        this.noteService.currentNotebook.subscribe({
+        this.currentNotebookSub = this.noteService.currentNotebook.subscribe({
             next: (notebook: Notebook | null) => this.currentNotebook = notebook
         });
     }
@@ -48,5 +53,11 @@ export class HeaderComponent implements OnInit {
 
     logout() {
         this.authService.logout();
+    }
+
+    ngOnDestroy(): void {
+        this.userSub?.unsubscribe();
+        this.notebooksSub?.unsubscribe();
+        this.currentNotebookSub?.unsubscribe();
     }
 }

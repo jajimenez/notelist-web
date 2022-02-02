@@ -1,4 +1,4 @@
 <div *ngIf="notes.length > 0" class="list-group list-group-flush">
-    <app-note-item *ngFor="let n of notes" [note]="n" [selected]="n.id === selectedNote"></app-note-item>
+    <app-note-item *ngFor="let n of notes" [note]="n" [selected]="n.id === currentNote"></app-note-item>
 </div>
 <div *ngIf="notes.length === 0" id="selectNotebookDialogNoNotebooks" class="alert">There are no notes</div>

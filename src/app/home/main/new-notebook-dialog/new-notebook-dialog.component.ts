@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { Subscription } from "rxjs";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
@@ -9,14 +10,16 @@ import { Notebook } from "src/app/models/notebook.model";
     templateUrl: "./new-notebook-dialog.component.html",
     styleUrls: ["./new-notebook-dialog.component.css"]
 })
-export class NewNotebookDialogComponent implements OnInit {
+export class NewNotebookDialogComponent implements OnInit, OnDestroy {
+    notebooksSub: Subscription | null = null;
+
     notebooks: Notebook[] = [];
     exists: boolean = false;
 
     constructor(private notebookService: NotebookService) {}
 
     ngOnInit(): void {
-        this.notebookService.notebooks.subscribe({
+        this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks,
             error: (e: string) => console.error(e)
         });
@@ -35,5 +38,9 @@ export class NewNotebookDialogComponent implements OnInit {
 
         const name = form.value.name;
         // this.notebookService.createNotebook(name);
+    }
+
+    ngOnDestroy(): void {
+        this.notebooksSub?.unsubscribe();
     }
 }

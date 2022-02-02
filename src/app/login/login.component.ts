@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { Subscription } from "rxjs";
 
 import { AuthService } from "src/app/services/auth.service";
 import { AuthUser } from "src/app/models/auth-user.model";
@@ -9,7 +10,9 @@ import { AuthUser } from "src/app/models/auth-user.model";
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.css"]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+    loginSub: Subscription | null = null;
+
     waiting: boolean = false;
     error: string | null = null;
 
@@ -27,7 +30,7 @@ export class LoginComponent implements OnInit {
         const username = form.value.username;
         const password = form.value.password;
 
-        this.authService.login(username, password).subscribe({
+        this.loginSub = this.authService.login(username, password).subscribe({
             next: (u: AuthUser) => {
                 this.waiting = false;
             },
@@ -36,5 +39,9 @@ export class LoginComponent implements OnInit {
                 this.error = e;
             }
         })
+    }
+
+    ngOnDestroy(): void {
+        this.loginSub?.unsubscribe();
     }
 }
