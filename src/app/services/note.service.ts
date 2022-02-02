@@ -76,7 +76,9 @@ export class NoteService {
                 const notebook = this.notebookService.notebooks.value.find(n => n.id === notebook_id);
 
                 // Set the current note
-                this.currentNote.next(null);
+                if (!notes.find((n: Note) => n.id === this.currentNote.value?.id)) {
+                    this.currentNote.next(null);
+                }
 
                 // Set the current notebook
                 if (notebook) this.currentNotebook.next(notebook);
