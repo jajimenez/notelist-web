@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
                     this.notebookService.notebooks.subscribe({
                         next: (notebooks: Notebook[]) => {
                             if (notebooks.length > 0) {
-                                this.router.navigate([notebooks[0].id], {relativeTo: this.actRoute});
+                                this.router.navigate(["notebooks", notebooks[0].id]);
                             }
                         }
                     });
