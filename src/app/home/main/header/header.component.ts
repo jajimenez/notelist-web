@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
+import { UserService } from "src/app/services/user.service";
+import { NotebookService } from "src/app/services/notebook.service";
+import { NoteService } from "src/app/services/note.service";
 import { User } from "src/app/models/user.model";
 import { Notebook } from "src/app/models/notebook.model";
 
@@ -11,19 +14,33 @@ import { Notebook } from "src/app/models/notebook.model";
 
 export class HeaderComponent implements OnInit {
     search = "";
-    @Input("user") user: User | null = null;
-    @Input("notebooks") notebooks: Notebook[] = [];
-    @Input("currentNotebook") currentNotebook: Notebook | undefined = undefined;
+    user: User | null = null;
+    notebooks: Notebook[] = [];
+    currentNotebook: Notebook | null = null;
 
-    constructor() {
+    constructor(
+        private userService: UserService,
+        private notebookService: NotebookService,
+        private noteService: NoteService) {
     }
 
     ngOnInit(): void {
+        this.userService.user.subscribe({
+            next: (user: User | null) => this.user = user
+        });
+
+        this.notebookService.notebooks.subscribe({
+            next: (notebooks: Notebook[]) => this.notebooks = notebooks
+        });
+
+        this.noteService.currentNotebook.subscribe({
+            next: (notebook: Notebook | null) => this.currentNotebook = notebook
+        });
     }
 
     getNotebookButtonTitle() {
         if (this.notebooks.length === 0) return "- No notebooks -";
-        if (this.currentNotebook === undefined) return "- Select a notebook -";
+        if (this.currentNotebook === null) return "- Select a notebook -";
         return this.currentNotebook.name;
     }
 

@@ -12,10 +12,10 @@ export class ManageNotebooksDialogComponent implements OnInit {
     notebooks: Notebook[] = [];
     checkedNotebooks: string[] = [];
 
-    constructor(private notebookService: NotebookService) { }
+    constructor(private notebookService: NotebookService) {}
 
     ngOnInit(): void {
-        this.notebookService.getNotebooks().subscribe({
+        this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks,
             error: (e: string) => console.error(e)
         });
@@ -29,8 +29,7 @@ export class ManageNotebooksDialogComponent implements OnInit {
 
         if (checkbox.checked) {
             this.checkedNotebooks.push(notebookId);
-        }
-        else {
+        } else {
             const i = this.checkedNotebooks.indexOf(notebookId);
             this.checkedNotebooks.splice(i, 1);
         }

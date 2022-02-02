@@ -19,14 +19,14 @@ export class NoteViewComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.noteService.currentNote.subscribe({
+            next: (n: Note | null) => this.note = n
+        });
+
         this.actRoute.params.subscribe({
             next: (params: Params) => {
                 const note_id = params["note_id"];
-
-                this.noteService.getNote(note_id).subscribe({
-                    next: (n: Note) => this.note = n,
-                    error: (e: string) => console.log(e)
-                });
+                if (note_id) this.noteService.loadNote(note_id);
             }
         });
     }

@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
         this.actRoute.data.subscribe({
             next: (d: Data) => {
                 if (d["redirect"]) {
-                    this.notebookService.getNotebooks().subscribe({
+                    this.notebookService.notebooks.subscribe({
                         next: (notebooks: Notebook[]) => {
                             if (notebooks.length > 0) {
                                 this.router.navigate([notebooks[0].id], {relativeTo: this.actRoute});

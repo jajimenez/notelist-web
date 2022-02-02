@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, catchError, map, exhaustMap, throwError } from "rxjs";
+import { BehaviorSubject, catchError, map } from "rxjs";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "src/app/services/auth.service";
@@ -27,28 +27,35 @@ interface NotebookListResponseData {
 
 @Injectable({providedIn: "root"})
 export class NotebookService {
+    // BehaviorSubject is a type of Subject, and therefore a type of Observable, which
+    // allows us not only to subscribe to it whenever a new value of the user object
+    // is available but also to get the current value even if we subscribed after that
+    // value was set.
+    notebooks = new BehaviorSubject<Notebook[]>([]);
+
     constructor(private http: HttpClient, private authService: AuthService) {
+        this.authService.authUser.subscribe({
+            next: (u: AuthUser | null) => {
+                // If the current value of "authUser" is "null", it means no user is logged in
+                if (u) this.loadNotebooks();
+                else this.notebooks.next([]);
+            },
+            error: (e: any) => this.notebooks.next([])
+        });
     }
 
-    // Get the notebook list of the current user. The Access Token is automatically added
+    // Load the notebooks of the current user. The Access Token is automatically added
     // as a header to the request before sending it by the AuthInterceptor service.
-    getNotebooks(): Observable<Notebook[]> {
-        return this.authService.authUser.pipe(
-            exhaustMap((u: AuthUser | null) => {
-                // If the current value of "authUser" is "null", it means no user is logged in
-                if (u) {
-                    const url = environment.notelist_api_url + "/notebooks/notebooks";
-                    const request = this.http.get<NotebookListResponseData>(url);
+    private loadNotebooks() {
+        const url = environment.notelist_api_url + "/notebooks/notebooks";
+        const request = this.http.get<NotebookListResponseData>(url);
 
-                    return request.pipe(
-                        map((d: NotebookListResponseData) => d.result.map((x) => new Notebook(x.id, x.name, x.created_ts, x.last_modified_ts))),
-                        catchError(e => this.authService.handleError(request, e))
-                    )
-                } else {
-                    return throwError(() => Error("User not logged in."));
-                }
-            })
-        );
+        request.pipe(
+            map((d: NotebookListResponseData) => d.result.map((x) => new Notebook(x.id, x.name, x.created_ts, x.last_modified_ts))),
+            catchError(e => this.authService.handleError(request, e))
+        ).subscribe({
+            next: (notebooks: Notebook[]) => this.notebooks.next(notebooks)
+        });
     }
 
     /*createNotebook(name: string) {

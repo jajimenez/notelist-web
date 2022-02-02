@@ -13,10 +13,10 @@ export class NewNotebookDialogComponent implements OnInit {
     notebooks: Notebook[] = [];
     exists: boolean = false;
 
-    constructor(private notebookService: NotebookService) { }
+    constructor(private notebookService: NotebookService) {}
 
     ngOnInit(): void {
-        this.notebookService.getNotebooks().subscribe({
+        this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks,
             error: (e: string) => console.error(e)
         });

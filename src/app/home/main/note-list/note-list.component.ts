@@ -12,19 +12,17 @@ import { NotePreview } from "src/app/models/note.model";
 export class NoteListComponent implements OnInit {
     notes: NotePreview[] = [];
 
-    constructor(private route: ActivatedRoute, private noteService: NoteService) { }
+    constructor(private route: ActivatedRoute, private noteService: NoteService) {}
 
     ngOnInit(): void {
+        this.noteService.notes.subscribe({
+            next: (notes: NotePreview[]) => this.notes = notes
+        });
+
         this.route.params.subscribe({
             next: (params: Params) => {
                 const notebook_id = params["notebook_id"];
-
-                if (notebook_id) {
-                    this.noteService.getNotes(notebook_id).subscribe({
-                        next: (notes: NotePreview[]) => this.notes = notes,
-                        error: (e: string) => console.log(e)
-                    });
-                }
+                if (notebook_id) this.noteService.loadNotebookNotes(notebook_id);
             }
         });
     }
