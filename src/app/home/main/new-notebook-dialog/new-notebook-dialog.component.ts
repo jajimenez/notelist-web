@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { Notebook } from "src/app/models/notebook.model";
 
 import { NotebookService } from "src/app/services/notebook.service";
+import { Notebook } from "src/app/models/notebook.model";
 
 @Component({
     selector: "app-new-notebook-dialog",

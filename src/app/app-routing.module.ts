@@ -8,21 +8,15 @@ import { MainComponent } from "./home/main/main.component";
 import { NoteViewComponent } from "./home/main/note-view/note-view.component";
 
 const routes: Routes = [
-    {
-        "path": "", redirectTo: "/notebooks", pathMatch: "full"
-    },
+    {"path": "", redirectTo: "/notebooks", pathMatch: "full"},
     {
         path: "notebooks", component: HomeComponent, canActivate: [AuthGuardService],
         children: [
-            {
-                path: "", pathMatch: "full", data: {"redirect": true}, component: HomeComponent
-            },
+            {path: "", pathMatch: "full", data: {"redirect": true}, component: HomeComponent},
             {
                 path: ":notebook_id", component: MainComponent, 
                 children: [
-                    {
-                        path: "notes/:note_id", component: NoteViewComponent
-                    }
+                    {path: "notes/:note_id", component: NoteViewComponent}
                 ]
             }
         ]

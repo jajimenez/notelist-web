@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, map, catchError } from "rxjs";
 
 import { environment } from "src/environments/environment";
-import { AuthService } from "src/app/services/auth.service";
+import { AuthService } from "./auth.service";
 import { AuthUser } from "src/app/models/auth-user.model";
 import { User } from "src/app/models/user.model";
 
@@ -33,14 +33,15 @@ export class UserService {
     constructor(private http: HttpClient, private authService: AuthService) {
         this.authService.authUser.subscribe(
             (u: AuthUser | null) => {
+                // If the current value of "authUser" is "null", it means no user is logged in
                 if (u) {
                     // Get the user data from the API. The Access Token is automatically added as a
                     // header to to the request before sending it by the AuthInterceptor service.
                     const url = environment.notelist_api_url + "/users/user/" + u.user_id;
                     const request = this.http.get<UserResponseData>(url);
 
-                    request.subscribe({
-                        next: (d: UserResponseData) => this.user.next(new User(
+                    request.pipe(
+                        map((d: UserResponseData) => new User(
                             d.result.id,
                             d.result.username,
                             d.result.admin,
@@ -50,13 +51,15 @@ export class UserService {
                             d.result.created_ts,
                             d.result.last_modified_ts
                         )),
-                        error: (e: any) => this.authService.handleError(request, e)
-                    })
+                        catchError(e => this.authService.handleError(request, e))
+                    ).subscribe({
+                        next: (user: User) => this.user.next(user),
+                        error: (e: any) => this.user.next(null)
+                    });
                 } else {
-                    // If the current value of "authUser" is "null", it means no user is logged in
                     this.user.next(null);
                 }
-            },
+            }
         );
     }
 }

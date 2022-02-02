@@ -38,7 +38,8 @@ export class AuthService {
     // value was set.
     authUser = new BehaviorSubject<AuthUser | null>(null);
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(private http: HttpClient, private router: Router) {
+    }
 
     autoLogin() {
         const authUserVal = localStorage.getItem("auth-user");
@@ -74,7 +75,7 @@ export class AuthService {
             // in and redirect to the root route.
             tap((u: AuthUser) => {
                 localStorage.setItem("auth-user", JSON.stringify(u))
-                this.authUser.next(u)
+                this.authUser.next(u);
                 this.router.navigate(["/"]);
             })
         );
@@ -122,32 +123,21 @@ export class AuthService {
         );
     }
 
+    // Remove the user from the Local Storage, notify that no user is logged in and
+    // redirect to the Login route.
     private uiLogout() {
-        // Remove the user from the Local Storage, notify that no user is logged in and
-        // redirect to the Login route.
         localStorage.removeItem("auth-user")
         this.authUser.next(null);
-        this.router.navigate(["/login"]);
+        this.router.navigate(["login"]);
     }
 
-    logout(): Observable<void> {
+    logout() {
         const url = environment.notelist_api_url + "/auth/logout";
 
-        return this.http.get<LogoutResponseData>(url).pipe(
-            map((d: LogoutResponseData) => {}),
-            tap(() => this.uiLogout()),
-            catchError(errorResponse => {
-                this.uiLogout();
-
-                // Replace the error response by its "error.message" property if it
-                // exists or by "Unknown error" otherwise.
-                if (!errorResponse.error || !errorResponse.error.message) {
-                    return throwError(() => new Error("Unknown error"));
-                }
-
-                return throwError(() => new Error(errorResponse.error.message));
-            })
-        );
+        this.http.get<LogoutResponseData>(url).subscribe({
+            next: ((d: LogoutResponseData) => this.uiLogout()),
+            error: ((e: any) => this.uiLogout())
+        });
     }
 
     handleError(request: Observable<any>, errorResponse: any): Observable<any> {

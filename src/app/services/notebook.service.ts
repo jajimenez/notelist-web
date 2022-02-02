@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, map } from "rxjs";
 
 import { environment } from "src/environments/environment";
-import { AuthService } from "src/app/services/auth.service";
+import { AuthService } from "./auth.service";
 import { AuthUser } from "src/app/models/auth-user.model";
 import { Notebook } from "src/app/models/notebook.model";
 

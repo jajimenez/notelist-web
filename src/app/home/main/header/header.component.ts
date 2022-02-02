@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
+import { AuthService } from "src/app/services/auth.service";
 import { UserService } from "src/app/services/user.service";
 import { NotebookService } from "src/app/services/notebook.service";
 import { NoteService } from "src/app/services/note.service";
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit {
     currentNotebook: Notebook | null = null;
 
     constructor(
+        private authService: AuthService,
         private userService: UserService,
         private notebookService: NotebookService,
         private noteService: NoteService) {
@@ -45,6 +47,6 @@ export class HeaderComponent implements OnInit {
     }
 
     logout() {
-        // this.authService.logout().subscribe();
+        this.authService.logout();
     }
 }

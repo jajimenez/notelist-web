@@ -3,8 +3,8 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, map, catchError } from "rxjs";
 
 import { environment } from "src/environments/environment";
-import { AuthService } from "src/app/services/auth.service";
-import { NotebookService } from "src/app/services/notebook.service";
+import { AuthService } from "./auth.service";
+import { NotebookService } from "./notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
 import { NotePreview, Note } from "src/app/models/note.model";
 
