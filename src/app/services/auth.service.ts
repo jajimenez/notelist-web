@@ -83,7 +83,7 @@ export class AuthService {
 
     refreshLogin(): Observable<AuthUser> {
         return this.authUser.pipe(
-            take(1),
+            take(1),  // Get the current value (AuthUser instance) of the "authUser" observable
 
             exhaustMap((u: AuthUser | null) => {
                 if (!u || !u.refresh_token) return throwError(() => new Error("No user logged in"));
