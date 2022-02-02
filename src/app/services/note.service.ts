@@ -56,8 +56,12 @@ export class NoteService {
 
     private closeNotes() {
         this.notes.next([]);
-        this.currentNote.next(null);
+        this.closeCurrentNote();
         this.currentNotebook.next(null);
+    }
+
+    closeCurrentNote() {
+        this.currentNote.next(null);
     }
 
     // Load the notes of a given notebook. The Access Token is automatically added

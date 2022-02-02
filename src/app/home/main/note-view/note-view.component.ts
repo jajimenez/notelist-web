@@ -35,6 +35,7 @@ export class NoteViewComponent implements OnInit {
         this.actRoute.parent?.params.subscribe({
             next: (params: Params) => {
                 const notebook_id = params["notebook_id"];
+                this.noteService.closeCurrentNote();
                 this.router.navigate(["notebooks", notebook_id]);
             }
         });

@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { NoteService } from "src/app/services/note.service";
-import { NotePreview } from "src/app/models/note.model";
+import { NotePreview, Note } from "src/app/models/note.model";
 
 @Component({
     selector: "app-note-list",
@@ -11,12 +11,20 @@ import { NotePreview } from "src/app/models/note.model";
 })
 export class NoteListComponent implements OnInit {
     notes: NotePreview[] = [];
+    selectedNote: string | null = null;
 
     constructor(private route: ActivatedRoute, private noteService: NoteService) {}
 
     ngOnInit(): void {
         this.noteService.notes.subscribe({
             next: (notes: NotePreview[]) => this.notes = notes
+        });
+
+        this.noteService.currentNote.subscribe({
+            next: (note: Note | null) => {
+                if (note) this.selectedNote = note.id;
+                else this.selectedNote = null;
+            }
         });
 
         this.route.params.subscribe({
