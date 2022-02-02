@@ -11,10 +11,7 @@ import { Notebook } from "src/app/models/notebook.model";
     styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    private notebooksSub: Subscription | null = null;
     private dataSub: Subscription | null = null;
-
-    private notebooks: Notebook[] = [];
 
     constructor(
         private router: Router,
@@ -23,21 +20,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.notebooksSub = this.notebookService.notebooks.subscribe({
-            next: (notebooks: Notebook[]) => this.notebooks = notebooks
-        });
-
         this.dataSub = this.actRoute.data.subscribe({
             next: (d: Data) => {
-                if (d["redirect"] && this.notebooks.length > 0) {
-                    this.router.navigate(["notebooks", this.notebooks[0].id]);
-                }
+                const notebooksSub = this.notebookService.notebooks.subscribe({
+                    next: (notebooks: Notebook[]) => {
+                        if (d["redirect"] && notebooks.length > 0) {
+                            this.router.navigate(["notebooks", notebooks[0].id]);
+                        }
+
+                        notebooksSub.unsubscribe();
+                    }
+                });
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.notebooksSub?.unsubscribe();
         this.dataSub?.unsubscribe();
     }
 }
