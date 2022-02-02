@@ -11,6 +11,7 @@ import { NoteService } from "src/app/services/note.service";
 })
 export class NoteViewComponent implements OnInit {
     note: Note | null = null;
+    notebook_id: string | null = null;
 
     constructor(
         private router: Router,
@@ -29,15 +30,18 @@ export class NoteViewComponent implements OnInit {
                 if (note_id) this.noteService.loadNote(note_id);
             }
         });
+
+        this.actRoute.parent?.params.subscribe({
+            next: (params: Params) => {
+                this.notebook_id = params["notebook_id"];
+            }
+        });
     }
 
     close() {
-        this.actRoute.parent?.params.subscribe({
-            next: (params: Params) => {
-                const notebook_id = params["notebook_id"];
-                this.noteService.closeCurrentNote();
-                this.router.navigate(["notebooks", notebook_id]);
-            }
-        });
+        if (this.notebook_id) {
+            this.noteService.closeCurrentNote();
+            this.router.navigate(["notebooks", this.notebook_id]);
+        }
     }
 }
