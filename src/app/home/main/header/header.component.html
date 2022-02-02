@@ -37,13 +37,13 @@
             </ul>
             <ul class="navbar-nav" *ngIf="user">
                 <li class="navbar-item dropdown">
-                    <a class="nav-link dropdown-toggle active" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle active" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi-person-fill"></i>
                         {{ user.name ? user.name : user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#"><i class="bi-journal-text"></i> Manage notebooks</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi-gear me-2"></i>Settings</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#manageNotebooksDialog"><i class="bi-journal-text"></i> Manage notebooks</a></li>
+                        <li><a class="dropdown-item"><i class="bi-gear me-2"></i>Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" (click)="logout()"><i class="bi-box-arrow-in-right me-2"></i>Log out</a></li>
                     </ul>
