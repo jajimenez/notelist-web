@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, map, catchError } from "rxjs";
+import { Observable, BehaviorSubject, map, catchError } from "rxjs";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
@@ -38,6 +38,8 @@ interface NoteResponseData {
 
 @Injectable({providedIn: "root"})
 export class NoteService {
+    selectedNoteId = new BehaviorSubject<string | null>(null);
+
     constructor(private http: HttpClient, private authService: AuthService) {}
 
     // Get the notes of a given notebook. The Access Token is automatically added
