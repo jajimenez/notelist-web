@@ -31,7 +31,7 @@ export class NoteViewComponent implements OnInit, OnDestroy {
                 if (id) this.noteService.getNote(id).subscribe({
                     next: (note: Note) => {
                         this.note = note;
-                        this.noteService.selectedNoteId.next(id);
+                        this.noteService.currentNoteId.next(id);
                     }
                 });
             }
@@ -43,6 +43,6 @@ export class NoteViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.noteService.selectedNoteId.next(null);
+        this.noteService.currentNoteId.next(null);
     }
 }

@@ -38,7 +38,7 @@ interface NoteResponseData {
 
 @Injectable({providedIn: "root"})
 export class NoteService {
-    selectedNoteId = new BehaviorSubject<string | null>(null);
+    currentNoteId = new BehaviorSubject<string | null>(null);
 
     constructor(private http: HttpClient, private authService: AuthService) {}
 
