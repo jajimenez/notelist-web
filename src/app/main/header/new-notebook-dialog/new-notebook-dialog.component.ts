@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
+import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "src/app/models/notebook.model";
 
 @Component({
@@ -12,7 +13,7 @@ export class NewNotebookDialogComponent implements OnInit {
     @Input() notebooks: Notebook[] = [];
     exists: boolean = false;
 
-    constructor() {}
+    constructor(private notebookService: NotebookService) {}
 
     ngOnInit(): void {}
 
@@ -28,6 +29,8 @@ export class NewNotebookDialogComponent implements OnInit {
         if (!form.valid) return;
 
         const name = form.value.name;
-        // this.notebookService.createNotebook(name);
+        this.notebookService.createNotebook(name).subscribe({
+            next: (() => { console.log("Notebook created") })
+        });
     }
 }

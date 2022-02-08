@@ -50,8 +50,11 @@ export class NoteService {
         const request = this.http.post<NoteListResponseData>(url, data);
 
         return request.pipe(
-            map((d: NoteListResponseData) => d.result.map((x) => new NotePreview(x.id, x.title, x.tags))),
-            catchError(e => this.authService.handleError(request, e))
+            catchError(e => this.authService.handleError(request, e)),
+
+            map((d: NoteListResponseData) => d.result.map(
+                (x) => new NotePreview(x.id, x.title, x.tags)
+            ))
         );
     }
 
@@ -62,11 +65,12 @@ export class NoteService {
         const request = this.http.get<NoteResponseData>(url);
 
         return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+
             map((d: NoteResponseData) => new Note(
                 d.result.id, d.result.title, d.result.body, d.result.tags,
                 d.result.created, d.result.last_modified
-            )),
-            catchError(e => this.authService.handleError(request, e))
+            ))
         );
     }
 }

@@ -6,10 +6,10 @@ import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
 import { Notebook } from "src/app/models/notebook.model";
 
-/*interface ResponseData {
+interface ResponseData {
     message: string,
     message_type: string
-}*/
+}
 
 interface NotebookListResponseData {
     message: string,
@@ -37,21 +37,24 @@ export class NotebookService {
         const request = this.http.get<NotebookListResponseData>(url);
 
         return request.pipe(
-            map((d: NotebookListResponseData) => d.result.map((x) => new Notebook(x.id, x.name, x.created, x.last_modified))),
-            catchError(e => this.authService.handleError(request, e))
+            catchError(e => this.authService.handleError(request, e)),
+
+            map((d: NotebookListResponseData) => d.result.map(
+                (x) => new Notebook(x.id, x.name, x.created, x.last_modified)
+            ))
         );
     }
 
-    /*createNotebook(name: string) {
-        // Create a notebook. The Access Token is automatically added as a header to the
-        // request before sending it by the AuthInterceptor service.
+    // Create a notebook. The Access Token is automatically added as a header
+    // to the request before sending it by the AuthInterceptor service.
+    createNotebook(name: string): Observable<void> {
         const url = environment.notelistApiUrl + "/notebooks/notebook";
         const data = {name: name};
         const request = this.http.post<ResponseData>(url, data);
 
-        request.subscribe({
-            next: (d: ResponseData) => this.loadNotebooks(),
-            error: (e: any) => this.authService.handleError(request, e)
-        })
-    }*/
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            map((d: ResponseData) => undefined)
+        );
+    }
 }
