@@ -19,8 +19,7 @@ export class NoteItemComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.noteSub = this.noteService.currentNoteId.subscribe({
-            next: (noteId: string | null) => this.selected =
-                noteId !== null && this.note.id === noteId
+            next: (id: string | null) => this.selected = (id !== null && this.note.id === id)
         })
     }
 

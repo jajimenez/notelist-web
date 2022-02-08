@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, catchError, map } from "rxjs";
+import { Observable, BehaviorSubject, catchError, map } from "rxjs";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
@@ -26,6 +26,8 @@ interface NotebookListResponseData {
 
 @Injectable({providedIn: "root"})
 export class NotebookService {
+    currentNotebookId = new BehaviorSubject<string | null>(null);
+
     constructor(private http: HttpClient, private authService: AuthService) {}
 
     // Get the notebooks of the current user. The Access Token is automatically added
