@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
                 <div *ngIf="notebooks.length > 0" class="list-group">
-                    <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action" [routerLink]="['..', n.id]" data-bs-dismiss="modal">{{ n.name }}</a>
+                    <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action" [routerLink]="'/notebooks/' + n.id" data-bs-dismiss="modal">{{ n.name }}</a>
                 </div>
                 <div *ngIf="notebooks.length === 0" id="selectNotebookDialogNoNotebooks" class="alert alert-warning">There are no notebooks</div>
             </div>

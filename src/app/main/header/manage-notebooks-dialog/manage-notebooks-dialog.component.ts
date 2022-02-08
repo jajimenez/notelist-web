@@ -1,7 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Subscription } from "rxjs";
-
-import { NotebookService } from "src/app/services/notebook.service";
+import { Component, Input, OnInit } from "@angular/core";
 import { Notebook } from "src/app/models/notebook.model";
 
 @Component({
@@ -9,20 +6,13 @@ import { Notebook } from "src/app/models/notebook.model";
     templateUrl: "./manage-notebooks-dialog.component.html",
     styleUrls: ["./manage-notebooks-dialog.component.css"]
 })
-export class ManageNotebooksDialogComponent implements OnInit, OnDestroy {
-    notebooksSub: Subscription | null = null;
-
-    notebooks: Notebook[] = [];
+export class ManageNotebooksDialogComponent implements OnInit {
+    @Input() notebooks: Notebook[] = [];
     checkedNotebooks: string[] = [];
 
-    constructor(private notebookService: NotebookService) {}
+    constructor() {}
 
-    ngOnInit(): void {
-        this.notebooksSub = this.notebookService.notebooks.subscribe({
-            next: (notebooks: Notebook[]) => this.notebooks = notebooks,
-            error: (e: string) => console.error(e)
-        });
-    }
+    ngOnInit(): void {}
 
     toggleChecked(e: Event, notebookId: string) {
         const checkboxId = "checkbox_" + notebookId;
@@ -36,9 +26,5 @@ export class ManageNotebooksDialogComponent implements OnInit, OnDestroy {
             const i = this.checkedNotebooks.indexOf(notebookId);
             this.checkedNotebooks.splice(i, 1);
         }
-    }
-
-    ngOnDestroy(): void {
-        this.notebooksSub?.unsubscribe();
     }
 }

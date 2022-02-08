@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, map, catchError } from "rxjs";
+import { Observable, map, catchError, throwError } from "rxjs";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
-import { AuthUser } from "src/app/models/auth-user.model";
 import { User } from "src/app/models/user.model";
 
 interface UserResponseData {
@@ -15,51 +14,36 @@ interface UserResponseData {
         username: string,
         admin: boolean,
         enabled: boolean,
-        name: string,
-        email: string,
-        created_ts: number,
-        last_modified_ts: number
+        name: string | null,
+        email: string | null,
+        created: string | null,
+        last_modified: string | null
     }
 }
 
 @Injectable({providedIn: "root"})
 export class UserService {
-    // BehaviorSubject is a type of Subject, and therefore a type of Observable, which
-    // allows us not only to subscribe to it whenever a new value of the user object
-    // is available but also to get the current value even if we subscribed after that
-    // value was set.
-    user = new BehaviorSubject<User | null>(null);
+    constructor(private http: HttpClient, private authService: AuthService) {}
 
-    constructor(private http: HttpClient, private authService: AuthService) {
-        this.authService.authUser.subscribe(
-            (u: AuthUser | null) => {
-                // If the current value of "authUser" is "null", it means no user is logged in
-                if (u) {
-                    // Get the user data from the API. The Access Token is automatically added as a
-                    // header to to the request before sending it by the AuthInterceptor service.
-                    const url = environment.notelist_api_url + "/users/user/" + u.user_id;
-                    const request = this.http.get<UserResponseData>(url);
+    // Return the current user
+    getUser(): Observable<User> {
+        if (!this.authService.authUser) return throwError(() => new Error("No user logged in"));
 
-                    request.pipe(
-                        map((d: UserResponseData) => new User(
-                            d.result.id,
-                            d.result.username,
-                            d.result.admin,
-                            d.result.enabled,
-                            d.result.name,
-                            d.result.email,
-                            d.result.created_ts,
-                            d.result.last_modified_ts
-                        )),
-                        catchError(e => this.authService.handleError(request, e))
-                    ).subscribe({
-                        next: (user: User) => this.user.next(user),
-                        error: (e: any) => this.user.next(null)
-                    });
-                } else {
-                    this.user.next(null);
-                }
-            }
+        const url = environment.notelistApiUrl + "/users/user/" + this.authService.authUser.userId;
+        const request = this.http.get<UserResponseData>(url);
+
+        return request.pipe(
+            map((d: UserResponseData) => new User(
+                d.result.id,
+                d.result.username,
+                d.result.admin,
+                d.result.enabled,
+                d.result.name,
+                d.result.email,
+                d.result.created,
+                d.result.last_modified
+            )),
+            catchError(e => this.authService.handleError(request, e))
         );
     }
 }

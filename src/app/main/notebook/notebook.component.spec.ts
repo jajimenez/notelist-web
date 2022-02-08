@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { NotebookComponent } from "./notebook.component";
 
-import { NewNotebookDialogComponent } from "./new-notebook-dialog.component";
-
-describe("NewNotebookDialogComponent", () => {
-    let component: NewNotebookDialogComponent;
-    let fixture: ComponentFixture<NewNotebookDialogComponent>;
+describe("NotebookComponent", () => {
+    let component: NotebookComponent;
+    let fixture: ComponentFixture<NotebookComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [NewNotebookDialogComponent]
+            declarations: [ NotebookComponent ]
         })
         .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(NewNotebookDialogComponent);
+        fixture = TestBed.createComponent(NotebookComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

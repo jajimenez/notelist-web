@@ -1,12 +1,12 @@
 export class User {
     constructor(
-        public id: string,
-        public username: string,
-        public admin: boolean,
-        public enabled: boolean,
-        public name: string,
-        public email: string,
-        public created_ts: number,
-        public last_modified_ts: number
+        public id: string = "",
+        public username: string = "",
+        public admin: boolean = false,
+        public enabled: boolean = false,
+        public name: string | null = null,
+        public email: string | null = null,
+        public createdTs: string | null = null,
+        public lastModifiedTs: string | null = null
     ) {}
 }

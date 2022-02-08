@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { LogoutComponent } from "./logout.component";
 
-import { ManageNotebooksDialogComponent } from "./manage-notebooks-dialog.component";
-
-describe("ManageNotebooksDialogComponent", () => {
-    let component: ManageNotebooksDialogComponent;
-    let fixture: ComponentFixture<ManageNotebooksDialogComponent>;
+describe("LogoutComponent", () => {
+    let component: LogoutComponent;
+    let fixture: ComponentFixture<LogoutComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ManageNotebooksDialogComponent]
+            declarations: [ LogoutComponent ]
         })
         .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ManageNotebooksDialogComponent);
+        fixture = TestBed.createComponent(LogoutComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -6,34 +6,34 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
 import { AuthInterceptorService } from "./services/auth-interceptor.service";
 import { AppComponent } from "./app.component";
+import { MainComponent } from "./main/main.component";
+import { NotebookComponent } from "./main/notebook/notebook.component";
+import { HeaderComponent } from "./main/header/header.component";
+import { SelectNotebookDialogComponent } from "./main/header/select-notebook-dialog/select-notebook-dialog.component";
+import { ManageNotebooksDialogComponent } from "./main/header/manage-notebooks-dialog/manage-notebooks-dialog.component";
+import { NewNotebookDialogComponent } from "./main/header/new-notebook-dialog/new-notebook-dialog.component";
+import { NoteListComponent } from "./main/note-list/note-list.component";
+import { NoteItemComponent } from "./main/note-list/note-item/note-item.component";
+import { NoteViewComponent } from "./main/note-view/note-view.component";
+import { NoteEditComponent } from "./main/note-edit/note-edit.component";
 import { LoginComponent } from "./login/login.component";
-import { HomeComponent } from "./home/home.component";
-import { MainComponent } from "./home/main/main.component";
-import { HeaderComponent } from "./home/main/header/header.component";
-import { NoteListComponent } from "./home/main/note-list/note-list.component";
-import { NoteViewComponent } from "./home/main/note-view/note-view.component";
-import { NoteEditComponent } from "./home/main/note-edit/note-edit.component";
-import { NoteItemComponent } from "./home/main/note-list/note-item/note-item.component";
-import { DialogComponent } from './dialog/dialog.component';
-import { SelectNotebookDialogComponent } from './home/main/select-notebook-dialog/select-notebook-dialog.component';
-import { ManageNotebooksDialogComponent } from './home/main/manage-notebooks-dialog/manage-notebooks-dialog.component';
-import { NewNotebookDialogComponent } from './home/main/new-notebook-dialog/new-notebook-dialog.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
-        HomeComponent,
         MainComponent,
+        NotebookComponent,
         HeaderComponent,
-        NoteListComponent,
-        NoteViewComponent,
-        NoteEditComponent,
-        NoteItemComponent,
-        DialogComponent,
         SelectNotebookDialogComponent,
         ManageNotebooksDialogComponent,
-        NewNotebookDialogComponent
+        NewNotebookDialogComponent,
+        NoteListComponent,
+        NoteItemComponent,
+        NoteViewComponent,
+        NoteEditComponent,
+        LoginComponent,
+        LogoutComponent
     ],
     imports: [
         BrowserModule,
@@ -44,4 +44,5 @@ import { NewNotebookDialogComponent } from './home/main/new-notebook-dialog/new-
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -6,8 +6,7 @@ import { Component, OnInit } from "@angular/core";
     styleUrls: ["./note-edit.component.css"]
 })
 export class NoteEditComponent implements OnInit {
-    constructor() { }
+    constructor() {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 }

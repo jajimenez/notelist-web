@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  notelist_api_url: "http://localhost:8000"
+  notelistApiUrl: "http://localhost:8000"
 };
 
 /*

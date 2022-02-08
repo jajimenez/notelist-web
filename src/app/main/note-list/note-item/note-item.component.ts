@@ -10,9 +10,7 @@ export class NoteItemComponent implements OnInit {
     @Input() note: NotePreview = new NotePreview();
     @Input() selected: boolean = false;
 
-    constructor() {
-    }
+    constructor() {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 }

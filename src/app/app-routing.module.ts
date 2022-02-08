@@ -3,29 +3,29 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { AuthGuardService } from "./services/auth-guard.service";
 import { LoginComponent } from "./login/login.component";
-import { HomeComponent } from "./home/home.component";
-import { MainComponent } from "./home/main/main.component";
-import { NoteViewComponent } from "./home/main/note-view/note-view.component";
+import { LogoutComponent } from "./logout/logout.component";
+import { MainComponent } from "./main/main.component";
+import { NotebookComponent } from "./main/notebook/notebook.component";
+import { NoteViewComponent } from "./main/note-view/note-view.component";
 
 const routes: Routes = [
-    {"path": "", redirectTo: "/notebooks", pathMatch: "full"},
+    {"path": "", pathMatch: "full", component: MainComponent, canActivate: [AuthGuardService]},
     {
-        path: "notebooks", component: HomeComponent, canActivate: [AuthGuardService],
+        path: "notebooks/:notebook_id", component: NotebookComponent,
         children: [
-            {path: "", pathMatch: "full", data: {"redirect": true}, component: HomeComponent},
             {
-                path: ":notebook_id", component: MainComponent, 
-                children: [
-                    {path: "notes/:note_id", component: NoteViewComponent}
-                ]
+                path: ":note_id", component: NoteViewComponent
             }
         ]
     },
-    {path: "login", component: LoginComponent, canActivate: [AuthGuardService]}
+    // {path: "search/:search", component: SearchComponent, canActivate: [AuthGuardService]},
+    {path: "login", component: LoginComponent, canActivate: [AuthGuardService]},
+    {path: "logout", component: LogoutComponent, canActivate: [AuthGuardService]}
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

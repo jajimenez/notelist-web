@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { Observable, BehaviorSubject, throwError } from "rxjs"
-import { take, map, exhaustMap, tap, catchError } from "rxjs/operators";
+import { Observable, throwError } from "rxjs"
+import { map, exhaustMap, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
 import { AuthUser } from "src/app/models/auth-user.model";
@@ -32,35 +32,29 @@ interface LogoutResponseData {
 
 @Injectable({providedIn: "root"})
 export class AuthService {
-    // BehaviorSubject is a type of Subject, and therefore a type of Observable, which
-    // allows us not only to subscribe to it whenever a new value of the user object
-    // is available but also to get the current value even if we subscribed after that
-    // value was set.
-    authUser = new BehaviorSubject<AuthUser | null>(null);
+    authUser: AuthUser | null = null;
 
-    constructor(private http: HttpClient, private router: Router) {
-    }
+    constructor(private http: HttpClient, private router: Router) {}
 
     autoLogin() {
         const authUserVal = localStorage.getItem("auth-user");
         if (!authUserVal) return;
+
         const authUserData: AuthUser = JSON.parse(authUserVal);
-        this.authUser.next(authUserData);
+        this.authUser = authUserData;
     }
 
     login(username: string, password: string): Observable<AuthUser> {
-        const url = environment.notelist_api_url + "/auth/login";
+        const url = environment.notelistApiUrl + "/auth/login";
         const data = {username: username, password: password};
 
         return this.http.post<LoginResponseData>(url, data).pipe(
             // Replace the error response by its "error.message" property if it exists or
             // by "Unknown error" otherwise.
-            catchError(errorResponse => {
-                if (!errorResponse.error || !errorResponse.error.message) {
-                    return throwError(() => new Error("Unknown error"));
-                }
+            catchError(e => {
+                if (!e.error || !e.error.message) return throwError(() => new Error("Unknown error"));
 
-                return throwError(() => new Error(errorResponse.error.message));
+                return throwError(() => new Error(e.error.message));
             }),
 
             // Convert the response data to an AuthUser object
@@ -75,83 +69,76 @@ export class AuthService {
             // in and redirect to the root route.
             tap((u: AuthUser) => {
                 localStorage.setItem("auth-user", JSON.stringify(u))
-                this.authUser.next(u);
-                this.router.navigate(["/"]);
+                this.authUser = u;
+                this.router.navigateByUrl("/");
             })
         );
     }
 
-    refreshLogin(): Observable<AuthUser> {
-        return this.authUser.pipe(
-            take(1),  // Get the current value (AuthUser instance) of the "authUser" observable
+    private refreshLogin(): Observable<void> {
+        if (
+            !this.authUser ||
+            !this.authUser.refreshToken ||
+            !this.authUser.userId
+        ) return throwError(() => new Error("No user logged in"));
 
-            exhaustMap((u: AuthUser | null) => {
-                if (!u || !u.refresh_token) return throwError(() => new Error("No user logged in"));
-                const url = environment.notelist_api_url + "/auth/refresh";
+        const url = environment.notelistApiUrl + "/auth/refresh";
 
-                return this.http.get<RefreshResponseData>(url).pipe(
-                    catchError(errorResponse => {
-                        // If the refresh token is expired or not valid, or other error
-                        // occurred, we log out.
-                        this.uiLogout();
-                        
-                        // Replace the error response by its "error.message" property if
-                        // it exists or by "Unknown error" otherwise.
-                        if (!errorResponse.error || !errorResponse.error.message) {
-                            return throwError(() => new Error("Unknown error"));
-                        }
-        
-                        return throwError(() => new Error(errorResponse.error.message));
-                    }),
+        return this.http.get<RefreshResponseData>(url).pipe(
+            catchError(e => {
+                // If the refresh token is expired or not valid, or other error
+                // occurred, we log out.
+                this.uiLogout();
+                
+                // Replace the error response by its "error.message" property if
+                // it exists or by "Unknown error" otherwise.
+                if (!e.error || !e.error.message) return throwError(() => new Error("Unknown error"));
 
-                    // Convert the response data to an AuthUser object
-                    map((d: RefreshResponseData) => new AuthUser(
-                        d.result.access_token,
-                        u.refresh_token,
-                        u.user_id
-                    )),
+                return throwError(() => new Error(e.error.message));
+            }),
 
-                    // Save the user to the Local Storage in order to recover it in
-                    // case the application is reloaded. Notify about the user logged
-                    // in and redirect to the root route.
-                    tap((u: AuthUser) => {
-                        localStorage.setItem("auth-user", JSON.stringify(u))
-                        this.authUser.next(u);
-                    })
+            // Convert the response data to an AuthUser object
+            map((d: RefreshResponseData) => {
+                if (!this.authUser) throw new Error("No user logged in");
+
+                return new AuthUser(
+                    d.result.access_token,
+                    this.authUser.refreshToken,
+                    this.authUser.userId
                 );
-            })
+            }),
+
+            // Save the user to the Local Storage in order to recover it in
+            // case the application is reloaded. Notify about the user logged
+            // in and redirect to the root route.
+            tap((u: AuthUser) => {
+                localStorage.setItem("auth-user", JSON.stringify(u))
+                this.authUser = u;
+            }),
+
+            map((d: AuthUser) => undefined)
         );
     }
 
-    // Remove the user from the Local Storage, notify that no user is logged in and
-    // redirect to the Login route.
+    // Remove the user from the Local Storage and redirect to the Login route
     private uiLogout() {
         localStorage.removeItem("auth-user")
-        this.authUser.next(null);
-        this.router.navigate(["login"]);
+        this.authUser = null;
+        this.router.navigateByUrl("/login");
     }
 
-    logout() {
-        const url = environment.notelist_api_url + "/auth/logout";
-
-        this.http.get<LogoutResponseData>(url).subscribe({
-            next: ((d: LogoutResponseData) => this.uiLogout()),
-            error: ((e: any) => this.uiLogout())
-        });
-    }
-
-    handleError(request: Observable<any>, errorResponse: any): Observable<any> {
-        if (!errorResponse.error || !errorResponse.error.message || !errorResponse.error.message_type) {
+    handleError(request: Observable<any>, e: any): Observable<any> {
+        if (!e.error || !e.error.message || !e.error.message_type) {
             return throwError(() => new Error("Unknown error"))
         }
 
-        const message = errorResponse.error.message;
-        const messageType = errorResponse.error.message_type;
+        const message = e.error.message;
+        const messageType = e.error.message_type;
 
         if (messageType === "error_expired_token") {
             // If the access token is expired, we refresh the token and return the original request.
             return this.refreshLogin().pipe(
-                exhaustMap((u: AuthUser) => request)
+                exhaustMap(() => request)
             );
         } else if (messageType === "error_revoked_token") {
             // If the token is revoked, we log out.
@@ -159,5 +146,25 @@ export class AuthService {
         }
 
         return throwError(() => new Error(message));
+    }
+
+    logout(): Observable<void> {
+        const url = environment.notelistApiUrl + "/auth/logout";
+
+        return this.http.get<LogoutResponseData>(url).pipe(
+            catchError(e => {
+                // If the refresh token is expired or not valid, or other error
+                // occurred, we log out.
+                this.uiLogout();
+                
+                // Replace the error response by its "error.message" property if
+                // it exists or by "Unknown error" otherwise.
+                if (!e.error || !e.error.message) return throwError(() => new Error("Unknown error"));
+
+                return throwError(() => new Error(e.error.message));
+            }),
+            tap((d: LogoutResponseData) => this.uiLogout()),
+            map((d: LogoutResponseData) => undefined)
+        );
     }
 }

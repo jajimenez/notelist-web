@@ -1,6 +1,6 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-secondary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Notelist</a>
+        <a class="navbar-brand" [routerLink]="'/'">Notelist</a>
         <button class="navbar-toggler" type="button" aria-controls="menuOptions" aria-expanded="false" aria-label="Toggle menu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -12,24 +12,24 @@
                     </button>
                 </li>
                 <li class="nav-item me-2">
-                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0">
                         <i class="bi-filter"></i>
                     </button>
                 </li>
                 <li class="nav-item me-4">
-                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0">
                         <i class="bi-sort-down"></i>
                     </button>
                 </li>
                 <li class="nav-item me-4">
-                    <button class="btn btn-outline-light" type="button" [disabled]="currentNotebook === null">
+                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0">
                         <i class="bi-plus-lg"></i> New note
                     </button>
                 </li>
                 <li class="nav-item me-2">
                     <div class="input-group">
-                        <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" [(ngModel)]="search" [disabled]="currentNotebook === null">
-                        <button class="btn btn-outline-light" type="submit" [disabled]="search.trim() === ''" [disabled]="currentNotebook === null">
+                        <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" [(ngModel)]="search" [disabled]="notebooks.length === 0">
+                        <button class="btn btn-outline-light" type="submit" [disabled]="search.trim() === ''" [disabled]="notebooks.length === 0">
                             <i class="bi-search"></i>
                         </button>
                     </div>
@@ -45,13 +45,13 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#manageNotebooksDialog"><i class="bi-journal-text"></i> Manage notebooks</a></li>
                         <li><a class="dropdown-item"><i class="bi-gear me-2"></i>Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" (click)="logout()"><i class="bi-box-arrow-in-right me-2"></i>Log out</a></li>
+                        <li><a class="dropdown-item" [routerLink]="'/logout'"><i class="bi-box-arrow-in-right me-2"></i>Log out</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-<app-select-notebook-dialog></app-select-notebook-dialog>
-<app-manage-notebooks-dialog></app-manage-notebooks-dialog>
-<app-new-notebook-dialog></app-new-notebook-dialog>
+<app-select-notebook-dialog [notebooks]="notebooks"></app-select-notebook-dialog>
+<app-manage-notebooks-dialog [notebooks]="notebooks"></app-manage-notebooks-dialog>
+<app-new-notebook-dialog [notebooks]="notebooks"></app-new-notebook-dialog>
