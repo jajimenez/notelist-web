@@ -131,7 +131,7 @@ export class AuthService {
             return this.refreshLogin().pipe(
                 exhaustMap(() => request)
             );
-        } else if (messageType === "error_revoked_token") {
+        } else if (messageType === "error_missing_token" || messageType === "error_revoked_token") {
             // If the token is revoked, we log out.
             this._logout();
         }
