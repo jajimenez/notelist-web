@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { take } from "rxjs/operators";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "../models/notebook.model";
@@ -13,7 +14,7 @@ export class MainComponent implements OnInit {
     constructor(private router: Router, private notebookService: NotebookService) {}
 
     ngOnInit(): void {
-        this.notebookService.getNotebooks().subscribe({
+        this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => {
                 if (notebooks.length > 0) {
                     const id = notebooks[0].id;

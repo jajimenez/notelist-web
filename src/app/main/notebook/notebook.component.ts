@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
-import { NotePreview } from "src/app/models/note.model";
+import { Subscription } from "rxjs";
 
+import { NotePreview } from "src/app/models/note.model";
 import { NotebookService } from "src/app/services/notebook.service";
 import { NoteService } from "src/app/services/note.service";
 
@@ -12,6 +13,7 @@ import { NoteService } from "src/app/services/note.service";
 })
 export class NotebookComponent implements OnInit, OnDestroy {
     notes: NotePreview[] = [];
+    notesSub: Subscription | undefined;
 
     constructor(
         private actRoute: ActivatedRoute,
@@ -20,22 +22,20 @@ export class NotebookComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        this.notesSub = this.noteService.notes.subscribe({
+            next: (notes: NotePreview[]) => this.notes = notes
+        });
+
         this.actRoute.params.subscribe({
             next: (params: Params) => {
                 const notebookId: string = params["notebook_id"];
-
-                if (notebookId) {
-                    this.notebookService.currentNotebookId.next(notebookId);
-
-                    this.noteService.getNotebookNotes(notebookId).subscribe({
-                        next: (notes: NotePreview[]) => this.notes = notes
-                    });
-                }
+                if (notebookId) this.notebookService.setCurrentNotebook(notebookId).subscribe();
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.notebookService.currentNotebookId.next(null);
+        this.notesSub?.unsubscribe();
+        this.notebookService.setCurrentNotebook(null);
     }
 }

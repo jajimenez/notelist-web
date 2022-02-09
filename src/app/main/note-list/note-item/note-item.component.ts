@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { NoteService } from "src/app/services/note.service";
-import { NotePreview } from "src/app/models/note.model";
+import { NotePreview, Note } from "src/app/models/note.model";
 
 @Component({
     selector: "app-note-item",
@@ -11,19 +11,21 @@ import { NotePreview } from "src/app/models/note.model";
 })
 export class NoteItemComponent implements OnInit, OnDestroy {
     @Input() note: NotePreview = new NotePreview();
-    @Input() selected: boolean = false;
+    selected: boolean = false;
 
-    noteSub: Subscription | undefined;
+    currentNoteSub: Subscription | undefined;
 
     constructor(private noteService: NoteService) {}
 
     ngOnInit(): void {
-        this.noteSub = this.noteService.currentNoteId.subscribe({
-            next: (id: string | null) => this.selected = (id !== null && this.note.id === id)
+        this.currentNoteSub = this.noteService.currentNote.subscribe({
+            next: (note: Note | null) => this.selected = (
+                note !== null && this.note.id === note.id
+            )
         })
     }
 
     ngOnDestroy(): void {
-        this.noteSub?.unsubscribe();
+        this.currentNoteSub?.unsubscribe();
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute, Params } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import { Note } from "src/app/models/note.model";
 import { NoteService } from "src/app/services/note.service";
@@ -10,8 +11,10 @@ import { NoteService } from "src/app/services/note.service";
     styleUrls: ["./note-view.component.css"]
 })
 export class NoteViewComponent implements OnInit, OnDestroy {
-    note: Note = new Note();
     notebookId: string = "";
+    note: Note = new Note();
+
+    currentNoteSub: Subscription | undefined;
 
     constructor(
         private router: Router,
@@ -20,6 +23,13 @@ export class NoteViewComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        this.currentNoteSub = this.noteService.currentNote.subscribe({
+            next: (note: Note | null) => {
+                if (note) this.note = note;
+                else this.note = new Note();
+            }
+        });
+
         this.actRoute.parent?.params.subscribe({
             next: (params: Params) => this.notebookId = params["notebook_id"]
         });
@@ -27,13 +37,7 @@ export class NoteViewComponent implements OnInit, OnDestroy {
         this.actRoute.params.subscribe({
             next: (params: Params) => {
                 const id = params["note_id"];
-
-                if (id) this.noteService.getNote(id).subscribe({
-                    next: (note: Note) => {
-                        this.note = note;
-                        this.noteService.currentNoteId.next(id);
-                    }
-                });
+                if (id) this.noteService.setCurrentNote(id).subscribe();
             }
         });
     }
@@ -43,6 +47,7 @@ export class NoteViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.noteService.currentNoteId.next(null);
+        this.currentNoteSub?.unsubscribe();
+        this.noteService.setCurrentNote(null);
     }
 }

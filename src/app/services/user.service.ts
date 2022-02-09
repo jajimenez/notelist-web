@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, map, catchError, throwError } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
+import { AuthUser } from "../models/auth-user.model";
 import { User } from "src/app/models/user.model";
 
 interface UserResponseData {
@@ -23,16 +25,33 @@ interface UserResponseData {
 
 @Injectable({providedIn: "root"})
 export class UserService {
-    constructor(private http: HttpClient, private authService: AuthService) {}
+    user = new BehaviorSubject<User | null>(null);
 
-    // Return the current user
-    getUser(): Observable<User> {
-        if (!this.authService.authUser) return throwError(() => new Error("No user logged in"));
+    constructor(private http: HttpClient, private authService: AuthService) {
+        this.authService.authUser.subscribe({
+            next: (au: AuthUser | null) => this.updateUser(au)
+        });
+    }
 
-        const url = environment.notelistApiUrl + "/users/user/" + this.authService.authUser.userId;
+    // Update the current user
+    private updateUser(au: AuthUser | null) {
+        if (au) {
+            this.getUser(au.userId).subscribe({
+                next: (u: User) => this.user.next(u)
+            });
+        } else {
+            this.user.next(null);
+        }
+    }
+
+    // Return a given user
+    private getUser(id: string): Observable<User> {
+        const url = environment.notelistApiUrl + "/users/user/" + id;
         const request = this.http.get<UserResponseData>(url);
 
         return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+
             map((d: UserResponseData) => new User(
                 d.result.id,
                 d.result.username,
@@ -42,8 +61,7 @@ export class UserService {
                 d.result.email,
                 d.result.created,
                 d.result.last_modified
-            )),
-            catchError(e => this.authService.handleError(request, e))
+            ))
         );
     }
 }

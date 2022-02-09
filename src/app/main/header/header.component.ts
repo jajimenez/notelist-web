@@ -15,11 +15,12 @@ import { Notebook } from "src/app/models/notebook.model";
 export class HeaderComponent implements OnInit, OnDestroy {
     user: User = new User();
     notebooks: Notebook[] = [];
-    currentNotebookId: string | null = null;
+    currentNotebook: Notebook | null = null;
     search = "";
 
-    notebookSub: Subscription | undefined;
-
+    userSub: Subscription | undefined;
+    notebooksSub: Subscription | undefined;
+    currentNotebookSub: Subscription | undefined;
 
     constructor(
         private userService: UserService,
@@ -27,31 +28,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.userService.getUser().subscribe({
-            next: (user: User) => this.user = user
+        this.userSub = this.userService.user.subscribe({
+            next: (user: User | null) => {
+                if (user) this.user = user;
+                else this.user = new User();
+            }
         })
 
-        this.notebookService.getNotebooks().subscribe({
+        this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks
         });
 
-        this.notebookSub = this.notebookService.currentNotebookId.subscribe({
-            next: (id: string | null) => this.currentNotebookId = id
+        this.currentNotebookSub = this.notebookService.currentNotebook.subscribe({
+            next: (notebook: Notebook | null) => this.currentNotebook = notebook
         });
     }
 
     getNotebookButtonTitle() {
         if (this.notebooks.length === 0) return "- No notebooks -";
-
-        const name = this.notebooks.find(
-            (n: Notebook) => this.currentNotebookId && n.id === this.currentNotebookId
-        )?.name
-
-        if (name) return name;
+        if (this.currentNotebook) return this.currentNotebook.name;
         return "- Select a notebook -";
     }
 
     ngOnDestroy(): void {
-        this.notebookSub?.unsubscribe();
+        this.userSub?.unsubscribe();
+        this.notebooksSub?.unsubscribe();
+        this.currentNotebookSub?.unsubscribe();
     }
 }

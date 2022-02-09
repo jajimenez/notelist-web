@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { Observable, throwError } from "rxjs"
+import { Observable, BehaviorSubject, throwError } from "rxjs"
 import { map, exhaustMap, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
@@ -32,7 +32,7 @@ interface LogoutResponseData {
 
 @Injectable({providedIn: "root"})
 export class AuthService {
-    authUser: AuthUser | null = null;
+    authUser = new BehaviorSubject<AuthUser| null>(null);
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -41,7 +41,7 @@ export class AuthService {
         if (!authUserVal) return;
 
         const authUserData: AuthUser = JSON.parse(authUserVal);
-        this.authUser = authUserData;
+        this.authUser.next(authUserData);
     }
 
     login(username: string, password: string): Observable<AuthUser> {
@@ -69,18 +69,15 @@ export class AuthService {
             // in and redirect to the root route.
             tap((u: AuthUser) => {
                 localStorage.setItem("auth-user", JSON.stringify(u))
-                this.authUser = u;
+                this.authUser.next(u);
                 this.router.navigateByUrl("/");
             })
         );
     }
 
     private refreshLogin(): Observable<void> {
-        if (
-            !this.authUser ||
-            !this.authUser.refreshToken ||
-            !this.authUser.userId
-        ) return throwError(() => new Error("No user logged in"));
+        const au = this.authUser.value;
+        if (!au || !au.refreshToken || !au.userId) return throwError(() => new Error("No user logged in"));
 
         const url = environment.notelistApiUrl + "/auth/refresh";
 
@@ -88,7 +85,7 @@ export class AuthService {
             catchError(e => {
                 // If the refresh token is expired or not valid, or other error
                 // occurred, we log out.
-                this.uiLogout();
+                this._logout();
                 
                 // Replace the error response by its "error.message" property if
                 // it exists or by "Unknown error" otherwise.
@@ -99,13 +96,7 @@ export class AuthService {
 
             // Convert the response data to an AuthUser object
             map((d: RefreshResponseData) => {
-                if (!this.authUser) throw new Error("No user logged in");
-
-                return new AuthUser(
-                    d.result.access_token,
-                    this.authUser.refreshToken,
-                    this.authUser.userId
-                );
+                return new AuthUser(d.result.access_token, au.refreshToken, au.userId);
             }),
 
             // Save the user to the Local Storage in order to recover it in
@@ -113,17 +104,17 @@ export class AuthService {
             // in and redirect to the root route.
             tap((u: AuthUser) => {
                 localStorage.setItem("auth-user", JSON.stringify(u))
-                this.authUser = u;
+                this.authUser.next(u);
             }),
 
             map((d: AuthUser) => undefined)
         );
     }
 
-    // Remove the user from the Local Storage and redirect to the Login route
-    private uiLogout() {
+    // Unset the user and redirect to the Login route
+    private _logout() {
         localStorage.removeItem("auth-user")
-        this.authUser = null;
+        this.authUser.next(null);
         this.router.navigateByUrl("/login");
     }
 
@@ -142,7 +133,7 @@ export class AuthService {
             );
         } else if (messageType === "error_revoked_token") {
             // If the token is revoked, we log out.
-            this.uiLogout();
+            this._logout();
         }
 
         return throwError(() => new Error(message));
@@ -155,7 +146,7 @@ export class AuthService {
             catchError(e => {
                 // If the refresh token is expired or not valid, or other error
                 // occurred, we log out.
-                this.uiLogout();
+                this._logout();
                 
                 // Replace the error response by its "error.message" property if
                 // it exists or by "Unknown error" otherwise.
@@ -163,8 +154,8 @@ export class AuthService {
 
                 return throwError(() => new Error(e.error.message));
             }),
-            tap((d: LogoutResponseData) => this.uiLogout()),
-            map((d: LogoutResponseData) => undefined)
+            map((d: LogoutResponseData) => undefined),
+            tap(() => this._logout())
         );
     }
 }

@@ -11,7 +11,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // If the URL is the Login one or the current user is "null", we
         // return the original request without modifying it.
-        const u = this.authService.authUser;
+        const u = this.authService.authUser.value;
         if (req.url.endsWith("/auth/login") || !u) return next.handle(req);
 
         // Modify the request to include the Authorization header with the access or refresh token

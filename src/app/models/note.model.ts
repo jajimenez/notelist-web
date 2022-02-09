@@ -1,15 +1,8 @@
-export class Tag {
-    constructor(
-        public name: string = "",
-        public color: string | null = null
-    ) {}
-}
-
 export class NotePreview {
     constructor(
         public id: string = "",
         public title: string | null = null,
-        public tags: Tag[] = []
+        public tags: string[] | null = null
     ) {}
 }
 
@@ -18,7 +11,7 @@ export class Note {
         public id: string = "",
         public title: string | null = null,
         public body: string | null = null,
-        public tags: Tag[] = [],
+        public tags: string[] | null = null,
         public created: string | null = null,
         public lastModified: string | null = null
     ) {}

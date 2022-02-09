@@ -29,8 +29,6 @@ export class NewNotebookDialogComponent implements OnInit {
         if (!form.valid) return;
 
         const name = form.value.name;
-        this.notebookService.createNotebook(name).subscribe({
-            next: (() => { console.log("Notebook created") })
-        });
+        this.notebookService.createNotebook(name).subscribe();
     }
 }

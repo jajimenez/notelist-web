@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
         // Return "true" if there is a user logged in or the URL to redirect to otherwise
         const rootPath = "/";
         const loginPath = "/login";
-        const u = this.authService.authUser;
+        const u = this.authService.authUser.value;
 
         if (!u && !state.url.endsWith(loginPath)) return this.router.createUrlTree([loginPath]);
         if (u && state.url.endsWith(loginPath)) return this.router.createUrlTree([rootPath]);
