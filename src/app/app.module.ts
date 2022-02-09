@@ -14,10 +14,11 @@ import { ManageNotebooksDialogComponent } from "./main/header/manage-notebooks-d
 import { NewNotebookDialogComponent } from "./main/header/new-notebook-dialog/new-notebook-dialog.component";
 import { NoteListComponent } from "./main/note-list/note-list.component";
 import { NoteItemComponent } from "./main/note-list/note-item/note-item.component";
+import { TagComponent } from "./main/tag/tag.component";
 import { NoteViewComponent } from "./main/note-view/note-view.component";
 import { NoteEditComponent } from "./main/note-edit/note-edit.component";
 import { LoginComponent } from "./login/login.component";
-import { LogoutComponent } from './logout/logout.component';
+import { LogoutComponent } from "./logout/logout.component";
 
 @NgModule({
     declarations: [
@@ -30,6 +31,7 @@ import { LogoutComponent } from './logout/logout.component';
         NewNotebookDialogComponent,
         NoteListComponent,
         NoteItemComponent,
+        TagComponent,
         NoteViewComponent,
         NoteEditComponent,
         LoginComponent,
@@ -44,5 +46,4 @@ import { LogoutComponent } from './logout/logout.component';
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

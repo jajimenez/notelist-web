@@ -10,6 +10,9 @@
         </div>
     </div>
     <div class="card-body">
-        {{ note.body }}
+        <div id="tags">
+            <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)"></app-tag>
+        </div>
+        <div>{{ note.body }}</div>
     </div>
 </div>
