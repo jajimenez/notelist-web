@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
-import { take } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 import { NotebookService } from "src/app/services/notebook.service";
 import { Notebook } from "../models/notebook.model";
@@ -10,11 +10,13 @@ import { Notebook } from "../models/notebook.model";
     templateUrl: "./main.component.html",
     styleUrls: ["./main.component.css"]
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
+    notebooksSub: Subscription | undefined;
+
     constructor(private router: Router, private notebookService: NotebookService) {}
 
     ngOnInit(): void {
-        this.notebookService.notebooks.subscribe({
+        this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => {
                 if (notebooks.length > 0) {
                     const id = notebooks[0].id;
@@ -22,5 +24,9 @@ export class MainComponent implements OnInit {
                 }
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.notebooksSub?.unsubscribe();
     }
 }
