@@ -22,7 +22,7 @@ export class NoteItemComponent implements OnInit, OnDestroy {
             next: (note: Note | null) => this.selected = (
                 note !== null && this.note.id === note.id
             )
-        })
+        });
     }
 
     ngOnDestroy(): void {

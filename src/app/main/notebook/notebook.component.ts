@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { NotePreview } from "src/app/models/note.model";
 import { NotebookService } from "src/app/services/notebook.service";
 import { NoteService } from "src/app/services/note.service";
+import { NotePreview } from "src/app/models/note.model";
 
 @Component({
     selector: "app-notebook",

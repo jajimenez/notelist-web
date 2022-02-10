@@ -9,7 +9,7 @@ export class TagComponent implements OnInit {
     @Input() name: string = "";
     @Input() color: string | undefined = undefined;
 
-    constructor() { }
+    constructor() {}
 
     ngOnInit(): void {}
 
