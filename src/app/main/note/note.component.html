@@ -27,10 +27,17 @@
         </div>
     </div>
     <div class="card-body">
-        <div *ngIf="note.tags" id="tags">
-            <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)"></app-tag>
+        <div *ngIf="!editMode" id="tags">
+            <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)" [editMode]="false"></app-tag>
+        </div>
+        <div *ngIf="editMode" id="tags">
+            <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)" [editMode]="true" (close)="onTagClose(t)"></app-tag>
+            <button id="addTagBu" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#addTagDialog">
+                <i class="bi-plus-lg"></i> Add tag
+            </button>
         </div>
         <markdown *ngIf="!editMode" [data]="note.body"></markdown>
         <textarea *ngIf="editMode" id="bodyTa" class="form-control" aria-label="Body" #bodyTa (input)="onBodyInput(bodyTa)" [(ngModel)]="note.body"></textarea>
     </div>
 </div>
+<app-add-tag-dialog [noteTags]="note.tags" (addTag)="onAddTag($event)"></app-add-tag-dialog>

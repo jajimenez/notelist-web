@@ -11,6 +11,7 @@ import { Notebook } from "src/app/models/notebook.model";
 })
 export class NewNotebookDialogComponent implements OnInit {
     @Input() notebooks: Notebook[] = [];
+    valid: boolean = false;
     exists: boolean = false;
 
     constructor(private notebookService: NotebookService) {}
@@ -18,17 +19,18 @@ export class NewNotebookDialogComponent implements OnInit {
     ngOnInit(): void {}
 
     onNameInput(form: NgForm) {
-        const name: string = form.value.name;
+        const name: string = form.value.name.trim();
+        this.valid = name.length !== 0;
 
         this.exists = this.notebooks.find(
-            (n: Notebook) => name.trim().toLowerCase() === n.name.trim().toLowerCase()
+            (n: Notebook) => name.toLowerCase() === n.name.trim().toLowerCase()
         ) !== undefined
     }
 
     onSubmit(form: NgForm) {
-        if (!form.valid) return;
+        if (!form.valid || !this.valid || this.exists) return;
 
-        const name = form.value.name;
+        const name = form.value.name.trim();
         this.notebookService.createNotebook(name).subscribe();
     }
 }

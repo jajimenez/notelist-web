@@ -84,13 +84,8 @@ export class NoteComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(url);
     }
 
-    resizeBodyTa(bodyTa: HTMLElement) {
-        bodyTa.style.height = "auto";
-        bodyTa.style.height = bodyTa.scrollHeight + "px";
-    }
-
-    onBodyInput(bodyTa: HTMLElement) {
-        this.resizeBodyTa(bodyTa);
+    onCloseClick() {
+        if (this.notebookId) this.router.navigateByUrl("/notebooks/" + this.notebookId);
     }
 
     onSaveClick() {
@@ -107,8 +102,22 @@ export class NoteComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(url);
     }
 
-    onCloseClick() {
-        if (this.notebookId) this.router.navigateByUrl("/notebooks/" + this.notebookId);
+    onTagClose(tag: string) {
+        this.note.tags = this.note.tags.filter((t: string) => t != tag);
+    }
+
+    onAddTag(tag: any) {
+        const _tag: string = tag;
+        this.note.tags.push(_tag);
+    }
+
+    resizeBodyTa(bodyTa: HTMLElement) {
+        bodyTa.style.height = "auto";
+        bodyTa.style.height = bodyTa.scrollHeight + "px";
+    }
+
+    onBodyInput(bodyTa: HTMLElement) {
+        this.resizeBodyTa(bodyTa);
     }
 
     ngAfterContentChecked() {

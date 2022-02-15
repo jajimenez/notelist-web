@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
     selector: "app-tag",
@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from "@angular/core";
 export class TagComponent implements OnInit {
     @Input() name: string = "";
     @Input() color: string | undefined = undefined;
+    @Input() editMode: boolean = false;
+    @Output() close: EventEmitter<void> = new EventEmitter();
 
     constructor() {}
 
@@ -16,5 +18,9 @@ export class TagComponent implements OnInit {
     getStyle(): object {
         if (this.color) return {backgroundColor: this.color};
         return {};
+    }
+
+    onCloseClick() {
+        this.close.emit();
     }
 }
