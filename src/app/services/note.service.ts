@@ -9,6 +9,11 @@ import { NotebookService } from "./notebook.service";
 import { Notebook } from "../models/notebook.model";
 import { NotePreview, Note } from "src/app/models/note.model";
 
+interface ResponseData {
+    message: string,
+    message_type: string
+}
+
 interface NoteListResponseData {
     message: string,
     message_type: string,
@@ -46,11 +51,6 @@ interface CreateNoteResponseData {
     result: {
         id: string
     }
-}
-
-interface UpdateNoteResponseData {
-    message: string,
-    message_type: string
 }
 
 @Injectable({providedIn: "root"})
@@ -146,7 +146,7 @@ export class NoteService {
             tags: note.tags
         }
 
-        const request = this.http.post<UpdateNoteResponseData>(url, data);
+        const request = this.http.post<CreateNoteResponseData>(url, data);
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
@@ -168,11 +168,23 @@ export class NoteService {
             tags: note.tags
         }
 
-        const request = this.http.put<UpdateNoteResponseData>(url, data);
+        const request = this.http.put<ResponseData>(url, data);
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            map((d: UpdateNoteResponseData) => undefined)
+            map((d: ResponseData) => undefined)
+        );
+    }
+
+    // Delete an existing note
+    deleteNote(id: string): Observable<void> {
+        const url = environment.notelistApiUrl + "/notes/note/" + id;
+        const request = this.http.delete<ResponseData>(url);
+
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            tap(() => this.updateNotes(this.notebookService.currentNotebook.value)),
+            map((d: ResponseData) => {})
         );
     }
 }

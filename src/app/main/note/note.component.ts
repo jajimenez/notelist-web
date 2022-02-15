@@ -84,7 +84,13 @@ export class NoteComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(url);
     }
 
-    onCloseClick() {
+    onDeleteConfirm() {
+        this.noteService.deleteNote(this.note.id).subscribe({
+            next: (() => this.close())
+        });
+    }
+
+    close() {
         if (this.notebookId) this.router.navigateByUrl("/notebooks/" + this.notebookId);
     }
 

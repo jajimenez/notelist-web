@@ -6,10 +6,10 @@
                 <input *ngIf="editMode" class="form-control" id="searchButton" placeholder="Title" maxlength="200" aria-label="Title" [(ngModel)]="note.title">
             </div>
             <div *ngIf="!editMode" class="col-md-3">
-                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Close" (click)="onCloseClick()">
+                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Close" (click)="close()">
                     <i class="bi-x-lg"></i>
                 </button>
-                <button type="button" class="btn btn-outline-secondary float-end option">
+                <button type="button" class="btn btn-outline-secondary float-end option" data-bs-toggle="modal" data-bs-target="#deleteNoteDialog">
                     <i class="bi-trash"></i>
                 </button>
                 <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Edit" (click)="onEditClick()">
@@ -41,3 +41,6 @@
     </div>
 </div>
 <app-add-tag-dialog [noteTags]="note.tags" (addTag)="onAddTag($event)"></app-add-tag-dialog>
+<app-confirmation-dialog [dialId]="'deleteNoteDialog'" [title]="'Delete note'" (accept)="onDeleteConfirm()">
+    Are you sure that you want to delete the note?
+</app-confirmation-dialog>

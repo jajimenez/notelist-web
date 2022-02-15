@@ -18,6 +18,7 @@ import { NoteListComponent } from "./main/note-list/note-list.component";
 import { NoteItemComponent } from "./main/note-list/note-item/note-item.component";
 import { TagComponent } from "./main/tag/tag.component";
 import { NoteComponent } from "./main/note/note.component";
+import { ConfirmationDialogComponent } from "./confirmation-dialog/confirmation-dialog.component";
 import { AddTagDialogComponent } from "./main/note/add-tag-dialog/add-tag-dialog.component";
 import { LoginComponent } from "./login/login.component";
 import { LogoutComponent } from "./logout/logout.component";
@@ -35,6 +36,7 @@ import { LogoutComponent } from "./logout/logout.component";
         NoteItemComponent,
         TagComponent,
         NoteComponent,
+        ConfirmationDialogComponent,
         AddTagDialogComponent,
         LoginComponent,
         LogoutComponent
