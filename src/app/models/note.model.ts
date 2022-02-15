@@ -3,10 +3,10 @@ export class NotePreview {
         public id: string = "",
         public notebookId: string = "",
         public archived: boolean = false,
-        public title: string | undefined = undefined,
-        public tags: string[] | undefined = undefined,
-        public created: string | undefined = undefined,
-        public lastModified: string | undefined = undefined
+        public title: string = "",
+        public tags: string[] = [],
+        public created: string = "",
+        public lastModified: string = ""
     ) {}
 }
 
@@ -15,10 +15,10 @@ export class Note {
         public id: string = "",
         public notebookId: string = "",
         public archived: boolean = false,
-        public title: string | undefined = undefined,
-        public body: string | undefined = undefined,
-        public tags: string[] | undefined = undefined,
-        public created: string | undefined = undefined,
-        public lastModified: string | undefined = undefined
+        public title: string = "",
+        public body: string = "",
+        public tags: string[] = [],
+        public created: string = "",
+        public lastModified: string = ""
     ) {}
 }

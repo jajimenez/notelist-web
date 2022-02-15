@@ -95,7 +95,10 @@ export class NoteComponent implements OnInit, OnDestroy {
 
     onSaveClick() {
         this.noteService.updateNote(this.note).subscribe({
-            next: (() => this.editMode = false)
+            next: (() => {
+                const url = "/notebooks/" + this.notebookId + "/" + this.note.id;
+                this.router.navigateByUrl(url);
+            })
         });
     }
 

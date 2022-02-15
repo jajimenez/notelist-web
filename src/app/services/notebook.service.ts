@@ -18,8 +18,8 @@ interface NotebookData {
     id: string,
     name: string,
     tag_colors: {[id: string]: string} | undefined,
-    created: string | undefined,
-    last_modified: string | undefined
+    created: string,
+    last_modified: string
 }
 
 interface NotebookListResponseData {
