@@ -55,12 +55,16 @@ interface CreateNoteResponseData {
 
 @Injectable({providedIn: "root"})
 export class NoteService {
+    currentNotebook: Notebook | null = null;
     notes = new BehaviorSubject<NotePreview[]>([]);
     currentNote = new BehaviorSubject<Note | null>(null);
 
     constructor(private http: HttpClient, private authService: AuthService, private notebookService: NotebookService) {
         this.notebookService.currentNotebook.subscribe({
-            next: (notebook: Notebook | null) => this.updateNotes(notebook)
+            next: (notebook: Notebook | null) => {
+                this.currentNotebook = notebook;
+                this.updateNotes();
+            }
         });
 
         this.notes.subscribe({
@@ -68,10 +72,10 @@ export class NoteService {
         });
     }
 
-    // Update the notes
-    private updateNotes(notebook: Notebook | null) {
-        if (notebook) {
-            this.getNotebookNotes(notebook.id).subscribe({
+    // Update the note list
+    updateNotes() {
+        if (this.currentNotebook) {
+            this.getNotebookNotes(this.currentNotebook.id).subscribe({
                 next: (notes: NotePreview[]) => this.notes.next(notes)
             });
         } else {
@@ -150,7 +154,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNotes(this.notebookService.currentNotebook.value)),
+            tap(() => this.updateNotes()),
             map((d: CreateNoteResponseData) => d.result.id)
         );
     }
@@ -172,6 +176,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
+            tap(() => this.updateNotes()),
             map((d: ResponseData) => undefined)
         );
     }
@@ -183,7 +188,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNotes(this.notebookService.currentNotebook.value)),
+            tap(() => this.updateNotes()),
             map((d: ResponseData) => {})
         );
     }
