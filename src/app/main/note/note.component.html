@@ -1,0 +1,36 @@
+<div *ngIf="note" class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <span *ngIf="!editMode">{{ getTitle() }}</span>
+                <input *ngIf="editMode" class="form-control" id="searchButton" placeholder="Title" maxlength="200" aria-label="Title" [(ngModel)]="note.title">
+            </div>
+            <div *ngIf="!editMode" class="col-md-3">
+                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Close" (click)="onCloseClick()">
+                    <i class="bi-x-lg"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary float-end option">
+                    <i class="bi-trash"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Edit" (click)="onEditClick()">
+                    <i class="bi-pencil-square"></i>
+                </button>
+            </div>
+            <div *ngIf="editMode" class="col-md-3">
+                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Save" (click)="onDiscardClick()">
+                    <i class="bi-x-lg"></i> Discard
+                </button>
+                <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Save" (click)="onSaveClick()">
+                    <i class="bi-check-lg"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div *ngIf="note.tags" id="tags">
+            <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)"></app-tag>
+        </div>
+        <markdown *ngIf="!editMode" [data]="note.body"></markdown>
+        <textarea *ngIf="editMode" id="bodyTa" class="form-control" aria-label="Body" #bodyTa (input)="onBodyInput(bodyTa)" [(ngModel)]="note.body"></textarea>
+    </div>
+</div>

@@ -17,9 +17,9 @@ interface ResponseData {
 interface NotebookData {
     id: string,
     name: string,
-    tag_colors: {[id: string]: string} | null,
-    created: string | null,
-    last_modified: string | null
+    tag_colors: {[id: string]: string} | undefined,
+    created: string | undefined,
+    last_modified: string | undefined
 }
 
 interface NotebookListResponseData {

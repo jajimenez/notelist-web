@@ -4,9 +4,9 @@ export class User {
         public username: string = "",
         public admin: boolean = false,
         public enabled: boolean = false,
-        public name: string | null = null,
-        public email: string | null = null,
-        public createdTs: string | null = null,
-        public lastModifiedTs: string | null = null
+        public name: string | undefined = undefined,
+        public email: string | undefined = undefined,
+        public createdTs: string | undefined = undefined,
+        public lastModifiedTs: string | undefined = undefined
     ) {}
 }

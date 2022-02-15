@@ -25,6 +25,11 @@ export class NoteItemComponent implements OnInit, OnDestroy {
         });
     }
 
+    getTitle(): string {
+        if (this.note.title) return this.note.title;
+        return "Untitled";
+    }
+
     ngOnDestroy(): void {
         this.currentNoteSub?.unsubscribe();
     }

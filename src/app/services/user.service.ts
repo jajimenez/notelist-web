@@ -16,10 +16,10 @@ interface UserResponseData {
         username: string,
         admin: boolean,
         enabled: boolean,
-        name: string | null,
-        email: string | null,
-        created: string | null,
-        last_modified: string | null
+        name: string | undefined,
+        email: string | undefined,
+        created: string | undefined,
+        last_modified: string | undefined
     }
 }
 

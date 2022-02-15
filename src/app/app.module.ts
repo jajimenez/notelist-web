@@ -3,6 +3,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
+import { MarkdownModule} from "ngx-markdown";
+
 import { AppRoutingModule } from "./app-routing.module";
 import { AuthInterceptorService } from "./services/auth-interceptor.service";
 import { AppComponent } from "./app.component";
@@ -15,8 +17,7 @@ import { NewNotebookDialogComponent } from "./main/header/new-notebook-dialog/ne
 import { NoteListComponent } from "./main/note-list/note-list.component";
 import { NoteItemComponent } from "./main/note-list/note-item/note-item.component";
 import { TagComponent } from "./main/tag/tag.component";
-import { NoteViewComponent } from "./main/note-view/note-view.component";
-import { NoteEditComponent } from "./main/note-edit/note-edit.component";
+import { NoteComponent } from "./main/note/note.component";
 import { LoginComponent } from "./login/login.component";
 import { LogoutComponent } from "./logout/logout.component";
 
@@ -32,8 +33,7 @@ import { LogoutComponent } from "./logout/logout.component";
         NoteListComponent,
         NoteItemComponent,
         TagComponent,
-        NoteViewComponent,
-        NoteEditComponent,
+        NoteComponent,
         LoginComponent,
         LogoutComponent
     ],
@@ -41,7 +41,8 @@ import { LogoutComponent } from "./logout/logout.component";
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        AppRoutingModule
+        AppRoutingModule,
+        MarkdownModule.forRoot()
     ],
     providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
     bootstrap: [AppComponent]

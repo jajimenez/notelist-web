@@ -5,3 +5,8 @@
 #tags {
     margin-bottom: 15px;
 }
+
+textarea {
+    resize: none;
+    overflow: hidden;
+}

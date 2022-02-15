@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { NotebookService } from "src/app/services/notebook.service";
 import { UserService } from "src/app/services/user.service";
+import { NotebookService } from "src/app/services/notebook.service";
+import { NoteService } from "src/app/services/note.service";
 import { User } from "src/app/models/user.model";
 import { Notebook } from "src/app/models/notebook.model";
+import { Note } from "src/app/models/note.model";
 
 @Component({
     selector: "app-header",
@@ -23,7 +26,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     currentNotebookSub: Subscription | undefined;
 
     constructor(
+        private router: Router,
         private userService: UserService,
+        private noteService: NoteService,
         private notebookService: NotebookService
     ) {}
 
@@ -48,6 +53,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.notebooks.length === 0) return "- No notebooks -";
         if (this.currentNotebook) return this.currentNotebook.name;
         return "- Select a notebook -";
+    }
+
+    onNewNoteClick() {
+        if (!this.currentNotebook) return;
+
+        const notebookId = this.currentNotebook.id;
+        const note = new Note();
+        note.notebookId = notebookId;
+
+        this.noteService.createNote(note).subscribe({
+            next: (id: string) => this.router.navigateByUrl(
+                "/notebooks/" + notebookId + "/" + id + "/edit"
+            )
+        })
     }
 
     ngOnDestroy(): void {

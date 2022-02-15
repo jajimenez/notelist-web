@@ -11,7 +11,7 @@
                 <div class="text-center text-secondary" id="description">Tag based note taking</div>
             </div>
             <div class="row">
-                <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+                <form #form="ngForm" (ngSubmit)="onSubmit(form)">
                     <div class="form-floating mb-2">
                         <input type="text" class="form-control form-control-lg" id="usernameInput" name="username" placeholder="Username" required ngModel>
                         <label for="usernameInput">Username</label>

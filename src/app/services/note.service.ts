@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, BehaviorSubject } from "rxjs";
+import { Observable, BehaviorSubject, throwError } from "rxjs";
 import { map, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
@@ -15,8 +15,12 @@ interface NoteListResponseData {
     result: [
         {
             id: string,
-            title: string | null,
-            tags: string[] | null
+            notebook_id: string,
+            archived: boolean,
+            title: string | undefined,
+            tags: string[] | undefined,
+            created: string | undefined,
+            last_modified: string | undefined
         }
     ]
 }
@@ -26,12 +30,27 @@ interface NoteResponseData {
     message_type: string,
     result: {
         id: string,
-        title: string | null,
-        body: string | null,
-        tags: string[] | null,
-        created: string | null,
-        last_modified: string | null
+        notebook_id: string,
+        archived: boolean,
+        title: string | undefined,
+        body: string | undefined,
+        tags: string[] | undefined,
+        created: string | undefined,
+        last_modified: string | undefined
     }
+}
+
+interface CreateNoteResponseData {
+    message: string,
+    message_type: string,
+    result: {
+        id: string
+    }
+}
+
+interface UpdateNoteResponseData {
+    message: string,
+    message_type: string
 }
 
 @Injectable({providedIn: "root"})
@@ -78,7 +97,10 @@ export class NoteService {
             catchError(e => this.authService.handleError(request, e)),
 
             map((d: NoteListResponseData) => d.result.map(
-                (x) => new NotePreview(x.id, x.title, x.tags)
+                (x) => new NotePreview(
+                    x.id, x.notebook_id, x.archived, x.title, x.tags,
+                    x.created, x.last_modified
+                )
             ))
         );
     }
@@ -93,14 +115,14 @@ export class NoteService {
             catchError(e => this.authService.handleError(request, e)),
 
             map((d: NoteResponseData) => new Note(
-                d.result.id, d.result.title, d.result.body, d.result.tags,
-                d.result.created, d.result.last_modified
+                d.result.id, d.result.notebook_id, d.result.archived, d.result.title,
+                d.result.body, d.result.tags, d.result.created, d.result.last_modified
             ))
         );
     }
 
     // Set the current note
-    setCurrentNote(id: string | null): Observable<void> {
+    setCurrentNote(id: string | null): Observable<void> | void {
         if (id) {
             return this.getNote(id).pipe(
                 tap((n: Note) => this.currentNote.next(n)),
@@ -108,7 +130,49 @@ export class NoteService {
             )
         } else {
             this.currentNote.next(null);
-            return new Observable<void>();
         }
+    }
+
+    // Create a new note
+    createNote(note: Note): Observable<string> {
+        if (note.id) return throwError(() => new Error("Note has an ID."));
+        const url = environment.notelistApiUrl + "/notes/note";
+
+        const data = {
+            notebook_id: note.notebookId,
+            archived: note.archived,
+            title: note.title,
+            body: note.body,
+            tags: note.tags
+        }
+
+        const request = this.http.post<UpdateNoteResponseData>(url, data);
+
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            tap(() => this.updateNotes(this.notebookService.currentNotebook.value)),
+            map((d: CreateNoteResponseData) => d.result.id)
+        );
+    }
+
+    // Update an existing note
+    updateNote(note: Note): Observable<void> {
+        if (!note.id) return throwError(() => new Error("Note does not have an ID."));
+        const url = environment.notelistApiUrl + "/notes/note/" + note.id;
+
+        const data = {
+            notebook_id: note.notebookId,
+            archived: note.archived,
+            title: note.title,
+            body: note.body,
+            tags: note.tags
+        }
+
+        const request = this.http.put<UpdateNoteResponseData>(url, data);
+
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            map((d: UpdateNoteResponseData) => undefined)
+        );
     }
 }
