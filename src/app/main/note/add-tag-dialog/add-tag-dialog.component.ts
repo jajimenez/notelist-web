@@ -16,6 +16,12 @@ export class AddTagDialogComponent implements OnInit {
 
     ngOnInit(): void {}
 
+    onShow(form: NgForm) {
+        form.reset();
+        this.valid = false;
+        this.exists = false;
+    }
+
     onTagInput(form: NgForm) {
         const tag: string = form.value.tag.trim();
         this.valid = tag.length !== 0;

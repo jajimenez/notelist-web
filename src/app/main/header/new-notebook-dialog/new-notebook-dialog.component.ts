@@ -18,6 +18,12 @@ export class NewNotebookDialogComponent implements OnInit {
 
     ngOnInit(): void {}
 
+    onShow(form: NgForm) {
+        form.reset();
+        this.valid = false;
+        this.exists = false;
+    }
+
     onNameInput(form: NgForm) {
         const name: string = form.value.name.trim();
         this.valid = name.length > 1 && name.length < 200;
