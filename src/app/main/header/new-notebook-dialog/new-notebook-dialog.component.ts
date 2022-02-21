@@ -20,7 +20,7 @@ export class NewNotebookDialogComponent implements OnInit {
 
     onNameInput(form: NgForm) {
         const name: string = form.value.name.trim();
-        this.valid = name.length !== 0;
+        this.valid = name.length > 1 && name.length < 200;
 
         this.exists = this.notebooks.find(
             (n: Notebook) => name.toLowerCase() === n.name.trim().toLowerCase()
