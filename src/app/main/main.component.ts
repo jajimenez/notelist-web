@@ -18,7 +18,7 @@ export class MainComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => {
-                if (this.notebookService.currentNotebook.value !== null && notebooks.length > 0) {
+                if (this.notebookService.currentNotebook.value === null && notebooks.length > 0) {
                     const id = notebooks[0].id;
                     this.router.navigateByUrl("/notebooks/" + id);
                 }
