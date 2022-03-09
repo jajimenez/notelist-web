@@ -1,14 +1,14 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="addTagDialogTitle">Add tag</h5>
+    <h5 class="modal-title" id="newNotebookDialogTitle">{{ getTitle() }}</h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
 </div>
 <form (ngSubmit)="onSubmit(form)" #form="ngForm">
     <div class="modal-body">
         <div class="form-floating">
-            <input type="text" class="form-control form-control-lg" id="tagInput" name="tag" placeholder="Tag" required ngModel (input)="onTagInput(form)">
-            <label for="tagInput">Tag</label>
+            <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" required [(ngModel)]="notebookName" (input)="onNameInput(form)">
+            <label for="nameInput">Name</label>
         </div>
-        <div *ngIf="exists" id="addTagExists" class="alert alert-danger">The tag already exists</div>
+        <div *ngIf="exists" id="newNotebookExists" class="alert alert-danger">The notebook already exists</div>
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-secondary" [disabled]="!form.valid || !valid || exists">Accept</button>

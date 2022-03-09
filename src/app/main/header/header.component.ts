@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
+import { SelectNotebookDialogComponent } from "src/app/select-notebook-dialog/select-notebook-dialog.component";
+import { ManageNotebooksDialogComponent } from "src/app/manage-notebooks-dialog/manage-notebooks-dialog.component";
 import { UserService } from "src/app/services/user.service";
 import { NotebookService } from "src/app/services/notebook.service";
 import { NoteService } from "src/app/services/note.service";
@@ -27,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private modalService: NgbModal,
         private userService: UserService,
         private noteService: NoteService,
         private notebookService: NotebookService
@@ -38,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 if (user) this.user = user;
                 else this.user = new User();
             }
-        })
+        });
 
         this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks
@@ -55,6 +59,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         return "- Select a notebook -";
     }
 
+    onNotebookTitleClick() {
+        this.modalService.open(SelectNotebookDialogComponent);
+    }
+
     onNewNoteClick() {
         if (!this.currentNotebook) return;
 
@@ -66,7 +74,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
             next: (id: string) => this.router.navigateByUrl(
                 "/notebooks/" + notebookId + "/" + id + "/edit"
             )
-        })
+        });
+    }
+
+    onManageNotebooksClick() {
+        const d = this.modalService.open(ManageNotebooksDialogComponent);
     }
 
     ngOnDestroy(): void {

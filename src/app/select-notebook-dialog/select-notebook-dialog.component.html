@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="selectNotebookDialogTitle">Select notebook</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+</div>
+<div class="modal-body">
+    <div *ngIf="notebooks.length > 0" class="list-group">
+        <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action" [routerLink]="'/notebooks/' + n.id" (click)="modal.dismiss()">{{ n.name }}</a>
+    </div>
+    <div *ngIf="notebooks.length === 0" id="selectNotebookDialogNoNotebooks" class="alert alert-warning">There are no notebooks</div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="onManageClick()">Manage notebooks</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+</div>

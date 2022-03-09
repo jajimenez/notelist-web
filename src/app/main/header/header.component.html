@@ -7,7 +7,7 @@
         <div class="navbar-collapse collapse" id="menuOptions">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item me-2">
-                    <button class="btn btn-outline-light" type="button" data-bs-toggle="modal" data-bs-target="#selectNotebookDialog">
+                    <button class="btn btn-outline-light" type="button" (click)="onNotebookTitleClick()">
                         <i class="bi-journal-text"></i> {{ getNotebookButtonTitle() }}
                     </button>
                 </li>
@@ -42,7 +42,7 @@
                         {{ user.name ? user.name : user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#manageNotebooksDialog"><i class="bi-journal-text"></i> Manage notebooks</a></li>
+                        <li><a class="dropdown-item" (click)="onManageNotebooksClick()"><i class="bi-journal-text"></i> Manage notebooks</a></li>
                         <li><a class="dropdown-item"><i class="bi-gear me-2"></i>Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" [routerLink]="'/logout'"><i class="bi-box-arrow-in-right me-2"></i>Log out</a></li>
@@ -52,6 +52,3 @@
         </div>
     </div>
 </nav>
-<app-select-notebook-dialog [notebooks]="notebooks"></app-select-notebook-dialog>
-<app-manage-notebooks-dialog [notebooks]="notebooks"></app-manage-notebooks-dialog>
-<app-new-notebook-dialog [notebooks]="notebooks"></app-new-notebook-dialog>

@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-confirmation-dialog",
@@ -6,15 +7,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
     styleUrls: ["./confirmation-dialog.component.css"]
 })
 export class ConfirmationDialogComponent implements OnInit {
-    @Input("dialId") dialId: string = "";
-    @Input("title") title: string = "";
-    @Output() accept: EventEmitter<void> = new EventEmitter();
+    title: string = "";
+    message: string = "";
 
-    constructor() {}
+    constructor(public modal: NgbActiveModal) {}
 
     ngOnInit(): void {}
 
     onAcceptClick() {
-        this.accept.emit();
+        this.modal.close();
     }
 }

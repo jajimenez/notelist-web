@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, BehaviorSubject } from "rxjs";
-import { map, tap, catchError } from "rxjs/operators";
+import { Observable, BehaviorSubject, throwError, Subscriber } from "rxjs";
+import { map, exhaustMap, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
@@ -95,8 +95,14 @@ export class NotebookService {
                 map((n: Notebook) => undefined)
             )
         } else {
-            this.currentNotebook.next(null);
-            return new Observable<void>();
+            return new Observable(
+                (subscriber: Subscriber<void>) => {
+                    this.currentNotebook.next(null);
+
+                    subscriber.next();
+                    subscriber.complete();
+                }
+            );
         }
     }
 
@@ -111,6 +117,40 @@ export class NotebookService {
             catchError(e => this.authService.handleError(request, e)),
             map((d: ResponseData) => undefined),
             tap(() => this.updateNotebooks(this.userService.user.value))
+        );
+    }
+
+    // Update an existing notebook
+    updateNotebook(notebook: Notebook): Observable<void> {
+        if (!notebook.id) return throwError(() => new Error("Notebook does not have an ID."));
+        const url = environment.notelistApiUrl + "/notebooks/notebook/" + notebook.id;
+
+        const data = {
+            name: notebook.name,
+            tag_colors: notebook.tagColors
+        }
+
+        const request = this.http.put<ResponseData>(url, data);
+
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            tap(() => this.updateNotebooks(this.userService.user.value)),
+            map((d: ResponseData) => undefined)
+        );
+    }
+
+    // Delete an existing notebook
+    deleteNotebook(id: string): Observable<void> {
+        const url = environment.notelistApiUrl + "/notebooks/notebook/" + id;
+        const request = this.http.delete<ResponseData>(url);
+
+        return request.pipe(
+            catchError(e => this.authService.handleError(request, e)),
+            tap(() => {
+                this.updateNotebooks(this.userService.user.value);
+            }),
+            map((d: ResponseData) => {}),
+            exhaustMap(() =>  this.setCurrentNotebook(null))
         );
     }
 }
