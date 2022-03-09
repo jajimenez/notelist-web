@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { NgbModal, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -9,7 +9,8 @@ import { Notebook } from "src/app/models/notebook.model";
 @Component({
     selector: "app-select-notebook-dialog",
     templateUrl: "./select-notebook-dialog.component.html",
-    styleUrls: ["./select-notebook-dialog.component.css"]
+    styleUrls: ["./select-notebook-dialog.component.css"],
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectNotebookDialogComponent implements OnInit, OnDestroy {
     notebooks: Notebook[] = [];
@@ -22,13 +23,13 @@ export class SelectNotebookDialogComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.notebookService.notebooks.subscribe({
+        this.notebooksSub = this.notebookService.notebooks.subscribe({
             next: (notebooks: Notebook[]) => this.notebooks = notebooks
         });
     }
 
     onManageClick() {
-        const d = this.modalService.open(ManageNotebooksDialogComponent);
+        const d = this.modalService.open(ManageNotebooksDialogComponent, { scrollable: true, backdropClass: "backdrop" });
     }
 
     ngOnDestroy(): void {

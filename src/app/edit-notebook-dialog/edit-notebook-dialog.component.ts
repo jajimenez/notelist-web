@@ -48,8 +48,10 @@ export class EditNotebookDialogComponent implements OnInit {
     onSubmit(form: NgForm) {
         if (!form.valid || !this.valid || this.exists) return;
 
-        const name = form.value.name.trim();
-        const result = new Notebook(this.notebook.id, name);
+        const result = new Notebook();
+        result.id = this.notebook.id;
+        result.name = form.value.name.trim();
+
         this.modal.close(result);
     }
 }

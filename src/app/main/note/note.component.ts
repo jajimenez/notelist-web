@@ -89,7 +89,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     }
 
     onDeleteClick() {
-        const d = this.modalService.open(ConfirmationDialogComponent);
+        const d = this.modalService.open(ConfirmationDialogComponent, { scrollable: true });
 
         d.componentInstance.title = "Delete note";
         d.componentInstance.message = "Are you sure that you want to delete the note?";
@@ -126,7 +126,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     }
 
     onAddTagClick() {
-        const d = this.modalService.open(AddTagDialogComponent);
+        const d = this.modalService.open(AddTagDialogComponent, { scrollable: true });
         d.componentInstance.tags = this.note.tags;
 
         d.closed.subscribe({

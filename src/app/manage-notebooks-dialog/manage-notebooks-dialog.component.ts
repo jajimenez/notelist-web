@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { NgbModal, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -10,7 +10,8 @@ import { Notebook } from "src/app/models/notebook.model";
 @Component({
     selector: "app-manage-notebooks-dialog",
     templateUrl: "./manage-notebooks-dialog.component.html",
-    styleUrls: ["./manage-notebooks-dialog.component.css"]
+    styleUrls: ["./manage-notebooks-dialog.component.css"],
+    encapsulation: ViewEncapsulation.None
 })
 export class ManageNotebooksDialogComponent implements OnInit {
     notebooks: Notebook[] = [];
@@ -57,20 +58,20 @@ export class ManageNotebooksDialogComponent implements OnInit {
     }
 
     onAddClick() {
-        const d = this.modalService.open(EditNotebookDialogComponent);
+        const d = this.modalService.open(EditNotebookDialogComponent, { scrollable: true, backdropClass: "backdrop" });
         d.componentInstance.notebooks = this.notebooks;
 
         d.closed.subscribe({
-            next: (result: Notebook) => this.addNotebook(result)
+            next: (result: Notebook) => this.createNotebook(result)
         });
     }
 
-    private addNotebook(notebook: Notebook) {
+    private createNotebook(notebook: Notebook) {
         this.notebookService.createNotebook(notebook.name).subscribe();
     }
 
     onEditClick() {
-        const d = this.modalService.open(EditNotebookDialogComponent);
+        const d = this.modalService.open(EditNotebookDialogComponent, { scrollable: true, backdropClass: "backdrop" });
         d.componentInstance.notebooks = this.notebooks;
         d.componentInstance.notebook = this.checkedNotebooks[0];
 
@@ -87,10 +88,10 @@ export class ManageNotebooksDialogComponent implements OnInit {
         if (this.checkedNotebooks.length != 1) return;
 
         const name = this.checkedNotebooks[0].name;
-        const d = this.modalService.open(ConfirmationDialogComponent);
+        const d = this.modalService.open(ConfirmationDialogComponent, { scrollable: true, backdropClass: "backdrop" });
 
         d.componentInstance.title = "Delete notebook";
-        d.componentInstance.message = "Are you sure that you want to delete the " + name + " notebook?";
+        d.componentInstance.message = "Are you sure that you want to delete the <b>" + name + "</b> notebook?";
 
         d.closed.subscribe({
             next: () => this.deleteNotebook()

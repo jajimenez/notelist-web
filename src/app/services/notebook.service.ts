@@ -16,6 +16,7 @@ interface ResponseData {
 
 interface NotebookData {
     id: string,
+    user_id: string,
     name: string,
     tag_colors: {[id: string]: string} | undefined,
     created: string,
@@ -66,7 +67,10 @@ export class NotebookService {
             catchError(e => this.authService.handleError(request, e)),
 
             map((d: NotebookListResponseData) => d.result.map(
-                (x) => new Notebook(x.id, x.name, x.tag_colors, x.created, x.last_modified)
+                (x) => new Notebook(
+                    x.id, x.user_id, x.name, x.tag_colors,
+                    x.created, x.last_modified
+                )
             ))
         );
     }
@@ -81,7 +85,7 @@ export class NotebookService {
             catchError(e => this.authService.handleError(request, e)),
 
             map((d: NotebookResponseData) => new Notebook(
-                d.result.id, d.result.name, d.result.tag_colors,
+                d.result.id, d.result.user_id, d.result.name, d.result.tag_colors,
                 d.result.created, d.result.last_modified
             ))
         );

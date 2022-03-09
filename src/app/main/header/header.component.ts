@@ -6,6 +6,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { SelectNotebookDialogComponent } from "src/app/select-notebook-dialog/select-notebook-dialog.component";
 import { ManageNotebooksDialogComponent } from "src/app/manage-notebooks-dialog/manage-notebooks-dialog.component";
+import { SearchDialogComponent } from "src/app/search-dialog/search-dialog.component";
 import { UserService } from "src/app/services/user.service";
 import { NotebookService } from "src/app/services/notebook.service";
 import { NoteService } from "src/app/services/note.service";
@@ -18,7 +19,6 @@ import { Note } from "src/app/models/note.model";
     templateUrl: "./header.component.html",
     styleUrls: ["./header.component.css"]
 })
-
 export class HeaderComponent implements OnInit, OnDestroy {
     user: User = new User();
     notebooks: Notebook[] = [];
@@ -68,7 +68,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     onNotebookTitleClick() {
-        this.modalService.open(SelectNotebookDialogComponent);
+        this.modalService.open(SelectNotebookDialogComponent, { scrollable: true });
     }
 
     onNewNoteClick() {
@@ -94,11 +94,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (!form.valid || !this.searchValid) return;
 
         const search = form.value.search.trim();
-        // To-Do
+        const d = this.modalService.open(SearchDialogComponent, { scrollable: true });
+        d.componentInstance.search(search);
+
+        this.search = "";
     }
 
     onManageNotebooksClick() {
-        const d = this.modalService.open(ManageNotebooksDialogComponent);
+        const d = this.modalService.open(ManageNotebooksDialogComponent, { scrollable: true });
     }
 
     ngOnDestroy(): void {

@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="confirmationDialogTitle" [innerHTML]="getTitle()"></h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+</div>
+<div class="modal-body">
+    <ngb-accordion [closeOthers]="true" *ngIf="!searching">
+        <ngb-panel id="acc-notebooks-item" [title]="getNotebooksTitle()">
+            <ng-template ngbPanelContent>
+                <app-notebook-result-item *ngFor="let n of result.notebooks" [notebook]="n" (click)="modal.dismiss()"></app-notebook-result-item>
+            </ng-template>
+        </ngb-panel>
+        <ngb-panel id="acc-notes-item" [title]="getNotesTitle()">
+            <ng-template ngbPanelContent>
+                <app-note-result-item *ngFor="let n of result.notes" [note]="n" [notebooks]="notebooks" (click)="modal.dismiss()"></app-note-result-item>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</div>
+<div class="modal-footer" [ngClass]="{'d-flex': searching, 'justify-content-between': searching}">
+    <div class="spinner-border text-secondary" role="status" *ngIf="searching">
+        <span class="visually-hidden">Searching...</span>
+    </div>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+</div>

@@ -17,7 +17,6 @@ const routes: Routes = [
             {path: ":note_id/edit", component: NoteComponent}
         ]
     },
-    // {path: "search/:search", component: SearchComponent, canActivate: [AuthGuardService]},
     {path: "login", component: LoginComponent, canActivate: [AuthGuardService]},
     {path: "logout", component: LogoutComponent, canActivate: [AuthGuardService]}
 ];
@@ -26,5 +25,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

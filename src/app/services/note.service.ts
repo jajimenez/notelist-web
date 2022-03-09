@@ -63,7 +63,7 @@ export class NoteService {
         this.notebookService.currentNotebook.subscribe({
             next: (notebook: Notebook | null) => {
                 this.currentNotebook = notebook;
-                this.updateNotes();
+                this.updateNoteList();
             }
         });
 
@@ -73,7 +73,7 @@ export class NoteService {
     }
 
     // Update the note list
-    updateNotes() {
+    private updateNoteList() {
         if (this.currentNotebook) {
             this.getNotebookNotes(this.currentNotebook.id).subscribe({
                 next: (notes: NotePreview[]) => this.notes.next(notes)
@@ -154,7 +154,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNotes()),
+            tap(() => this.updateNoteList()),
             map((d: CreateNoteResponseData) => d.result.id)
         );
     }
@@ -176,7 +176,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNotes()),
+            tap(() => this.updateNoteList()),
             map((d: ResponseData) => undefined)
         );
     }
@@ -188,7 +188,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNotes()),
+            tap(() => this.updateNoteList()),
             map((d: ResponseData) => {})
         );
     }

@@ -12,6 +12,9 @@ import { MainComponent } from "./main/main.component";
 import { NotebookComponent } from "./main/notebook/notebook.component";
 import { HeaderComponent } from "./main/header/header.component";
 import { ConfirmationDialogComponent } from "./confirmation-dialog/confirmation-dialog.component";
+import { SearchDialogComponent } from "./search-dialog/search-dialog.component";
+import { NotebookResultItemComponent } from "./search-dialog/notebook-result-item/notebook-result-item.component";
+import { NoteResultItemComponent } from "./search-dialog/note-result-item/note-result-item.component";
 import { SelectNotebookDialogComponent } from "./select-notebook-dialog/select-notebook-dialog.component";
 import { ManageNotebooksDialogComponent } from "./manage-notebooks-dialog/manage-notebooks-dialog.component";
 import { EditNotebookDialogComponent } from "./edit-notebook-dialog/edit-notebook-dialog.component";
@@ -31,6 +34,9 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
         NotebookComponent,
         HeaderComponent,
         ConfirmationDialogComponent,
+        SearchDialogComponent,
+        NotebookResultItemComponent,
+        NoteResultItemComponent,
         SelectNotebookDialogComponent,
         ManageNotebooksDialogComponent,
         EditNotebookDialogComponent,

@@ -15,3 +15,7 @@
     margin-bottom: 0px;
     padding: 8px;
 }
+
+.backdrop {
+    background-color: transparent;
+}
