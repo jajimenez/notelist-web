@@ -1,10 +1,10 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-secondary">
     <div class="container-fluid">
         <a class="navbar-brand" [routerLink]="'/'">Notelist</a>
-        <button class="navbar-toggler" type="button" aria-controls="menuOptions" aria-expanded="false" aria-label="Toggle menu">
+        <button class="navbar-toggler" type="button" aria-controls="menuOptions" aria-expanded="false" aria-label="Toggle menu" (click)="toggleMenu()">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse collapse" id="menuOptions">
+        <div class="navbar-collapse collapse" id="menuOptions" [ngbCollapse]="menuCollapsed">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item me-2">
                     <button class="btn btn-outline-light" type="button" (click)="onNotebookTitleClick()">
@@ -27,12 +27,14 @@
                     </button>
                 </li>
                 <li class="nav-item me-2">
-                    <div class="input-group">
-                        <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" [(ngModel)]="search" [disabled]="notebooks.length === 0">
-                        <button class="btn btn-outline-light" type="submit" [disabled]="search.trim() === ''" [disabled]="notebooks.length === 0">
-                            <i class="bi-search"></i>
-                        </button>
-                    </div>
+                    <form (ngSubmit)="onSearchSubmit(form)" #form="ngForm">
+                        <div class="input-group">
+                            <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" required [(ngModel)]="search" (input)="onSearchInput(form)" [disabled]="notebooks.length === 0">
+                            <button class="btn btn-outline-light" type="submit" [disabled]="!form.valid || !searchValid"> <!--[disabled]="notebooks.length === 0 || search.trim() === ''">-->
+                                <i class="bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </li>
             </ul>
             <ul class="navbar-nav" *ngIf="user">

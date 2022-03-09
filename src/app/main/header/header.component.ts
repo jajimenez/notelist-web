@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -22,7 +23,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     user: User = new User();
     notebooks: Notebook[] = [];
     currentNotebook: Notebook | null = null;
-    search = "";
+
+    menuCollapsed: boolean = true;
+    search: string = "";
+    searchValid: boolean = false;
 
     userSub: Subscription | undefined;
     notebooksSub: Subscription | undefined;
@@ -53,6 +57,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         });
     }
 
+    toggleMenu() {
+        this.menuCollapsed = !this.menuCollapsed;
+    }
+
     getNotebookButtonTitle() {
         if (this.notebooks.length === 0) return "- No notebooks -";
         if (this.currentNotebook) return this.currentNotebook.name;
@@ -75,6 +83,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 "/notebooks/" + notebookId + "/" + id + "/edit"
             )
         });
+    }
+
+    onSearchInput(form: NgForm) {
+        const search: string = form.value.search.trim();
+        this.searchValid = search.length > 1 && search.length < 200;
+    }
+
+    onSearchSubmit(form: NgForm) {
+        if (!form.valid || !this.searchValid) return;
+
+        const search = form.value.search.trim();
+        // To-Do
     }
 
     onManageNotebooksClick() {
