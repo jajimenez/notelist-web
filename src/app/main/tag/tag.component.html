@@ -1,4 +1,4 @@
 <span *ngIf="!editMode" class="badge" [ngClass]="{'bg-secondary': !color}" [ngStyle]="{'background-color': color}">{{ name }}</span>
-<button *ngIf="editMode" class="btn btn-sm" [ngClass]="{'btn-secondary': !color}" [ngStyle]="{'background-color': color, 'color': '#ffffff'}" (click)="onCloseClick()">
+<button *ngIf="editMode" class="btn btn-sm" [ngClass]="{'btn-secondary': !color}" [ngStyle]="{'background-color': color, 'color': '#ffffff'}" aria-label="Remove" (click)="onCloseClick()">
     <i class="bi-x-lg"></i> {{ name }}
 </button>

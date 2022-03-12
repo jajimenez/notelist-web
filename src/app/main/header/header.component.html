@@ -12,17 +12,17 @@
                     </button>
                 </li>
                 <li class="nav-item me-2">
-                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0">
+                    <button class="btn btn-outline-light" type="button" aria-label="Filter" [disabled]="notebooks.length === 0">
                         <i class="bi-filter"></i>
                     </button>
                 </li>
                 <li class="nav-item me-4">
-                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0">
+                    <button class="btn btn-outline-light" type="button" aria-label="Sort" [disabled]="notebooks.length === 0">
                         <i class="bi-sort-down"></i>
                     </button>
                 </li>
                 <li class="nav-item me-4">
-                    <button class="btn btn-outline-light" type="button" [disabled]="notebooks.length === 0" (click)="onNewNoteClick()">
+                    <button class="btn btn-outline-light" type="button" aria-label="New note" [disabled]="notebooks.length === 0" (click)="onNewNoteClick()">
                         <i class="bi-plus-lg"></i> New note
                     </button>
                 </li>
@@ -30,7 +30,7 @@
                     <form (ngSubmit)="onSearchSubmit(form)" #form="ngForm">
                         <div class="input-group">
                             <input class="form-control" id="searchButton" type="search" name="search" placeholder="Search" aria-label="Search" required [(ngModel)]="search" (input)="onSearchInput(form)" [disabled]="notebooks.length === 0">
-                            <button class="btn btn-outline-light" type="submit" [disabled]="!form.valid || !searchValid">
+                            <button class="btn btn-outline-light" type="submit" aria-label="Search" [disabled]="!form.valid || !searchValid">
                                 <i class="bi-search"></i>
                             </button>
                         </div>

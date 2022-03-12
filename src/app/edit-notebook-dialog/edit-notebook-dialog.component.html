@@ -5,13 +5,13 @@
 <form (ngSubmit)="onSubmit(form)" #form="ngForm">
     <div class="modal-body">
         <div class="form-floating">
-            <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" required [(ngModel)]="notebookName" (input)="onNameInput(form)">
+            <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" aria-label="Name" required [(ngModel)]="notebookName" (input)="onNameInput(form)">
             <label for="nameInput">Name</label>
         </div>
         <div *ngIf="exists" id="newNotebookExists" class="alert alert-danger">The notebook already exists</div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" [disabled]="!form.valid || !valid || exists">Accept</button>
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+        <button type="submit" class="btn btn-secondary" aria-label="Accept" [disabled]="!form.valid || !valid || exists">Accept</button>
+        <button type="button" class="btn btn-secondary" aria-label="Cancel" (click)="modal.dismiss()">Cancel</button>
     </div>
 </form>

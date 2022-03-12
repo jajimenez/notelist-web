@@ -9,7 +9,7 @@
                 <button type="button" class="btn btn-outline-secondary float-end" aria-label="Close" (click)="close()">
                     <i class="bi-x-lg"></i>
                 </button>
-                <button type="button" class="btn btn-outline-secondary float-end option" (click)="onDeleteClick()">
+                <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Delete" (click)="onDeleteClick()">
                     <i class="bi-trash"></i>
                 </button>
                 <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Edit" (click)="onEditClick()">
@@ -17,7 +17,7 @@
                 </button>
             </div>
             <div *ngIf="editMode" class="col-md-3">
-                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Save" (click)="onDiscardClick()">
+                <button type="button" class="btn btn-outline-secondary float-end" aria-label="Discard" (click)="onDiscardClick()">
                     <i class="bi-x-lg"></i> Discard
                 </button>
                 <button type="button" class="btn btn-outline-secondary float-end option" aria-label="Save" (click)="onSaveClick()">
@@ -32,7 +32,7 @@
         </div>
         <div *ngIf="editMode" id="tags">
             <app-tag *ngFor="let t of note.tags" [name]="t" [color]="getTagColor(t)" [editMode]="true" (close)="onTagClose(t)"></app-tag>
-            <button id="addTagBu" class="btn btn-outline-secondary btn-sm" (click)="onAddTagClick()">
+            <button id="addTagBu" class="btn btn-outline-secondary btn-sm" aria-label="Add tag" (click)="onAddTagClick()">
                 <i class="bi-plus-lg"></i> Add tag
             </button>
         </div>

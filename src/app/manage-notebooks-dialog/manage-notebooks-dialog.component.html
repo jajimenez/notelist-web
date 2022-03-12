@@ -5,7 +5,7 @@
 <div class="modal-body">
     <div *ngIf="notebooks.length > 0" class="list-group">
         <a *ngFor="let n of notebooks" class="list-group-item list-group-item-action notebook" (click)="toggleChecked($event, n.id)">
-            <input type="checkbox" class="form-check-input checkbox" id="{{ 'checkbox_' + n.id }}" value="">
+            <input type="checkbox" class="form-check-input checkbox" id="{{ 'checkbox_' + n.id }}" value="" aria-label="Notebook">
             {{ n.name }}
         </a>
     </div>
@@ -13,15 +13,15 @@
 </div>
 <div class="modal-footer d-flex justify-content-between">
     <div>
-        <button type="button" class="btn btn-secondary option" (click)="onAddClick()">
+        <button type="button" class="btn btn-secondary option" aria-label="Add" (click)="onAddClick()">
             <i class="bi-plus-lg"></i>
         </button>
-        <button type="button" class="btn btn-secondary option" [disabled]="checkedNotebooks.length !== 1" (click)="onEditClick()">
+        <button type="button" class="btn btn-secondary option" aria-label="Edit" [disabled]="checkedNotebooks.length !== 1" (click)="onEditClick()">
             <i class="bi-pencil-square"></i>
         </button>
-        <button type="button" class="btn btn-secondary option" [disabled]="checkedNotebooks.length !== 1" (click)="onDeleteClick()">
+        <button type="button" class="btn btn-secondary option" aria-label="Delete" [disabled]="checkedNotebooks.length !== 1" (click)="onDeleteClick()">
             <i class="bi-trash"></i>
         </button>
     </div>
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    <button type="button" class="btn btn-secondary" aria-label="Close" (click)="modal.dismiss()">Close</button>
 </div>

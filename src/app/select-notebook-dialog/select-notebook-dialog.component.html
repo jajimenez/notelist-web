@@ -9,6 +9,6 @@
     <div *ngIf="notebooks.length === 0" id="selectNotebookDialogNoNotebooks" class="alert alert-warning">There are no notebooks</div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="onManageClick()">Manage notebooks</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    <button type="button" class="btn btn-secondary" aria-label="Manage notebooks" (click)="onManageClick()">Manage notebooks</button>
+    <button type="button" class="btn btn-secondary" aria-label="Close" (click)="modal.dismiss()">Close</button>
 </div>
