@@ -4,6 +4,13 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { Notebook } from "src/app/models/notebook.model";
 
+class TagColor {
+    constructor(
+        public tag: string = "",
+        public color: string | null = null
+    ) {}
+}
+
 @Component({
     selector: "app-edit-notebook-dialog",
     templateUrl: "./edit-notebook-dialog.component.html",
@@ -12,7 +19,9 @@ import { Notebook } from "src/app/models/notebook.model";
 export class EditNotebookDialogComponent implements OnInit {
     notebooks: Notebook[] = [];
     notebook: Notebook = new Notebook();
-    notebookName: string = "";
+    name: string = "";
+    tagColors: TagColor[] = [];
+
     editMode: boolean = false;
     valid: boolean = false;
     exists: boolean = false;
@@ -21,7 +30,16 @@ export class EditNotebookDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.editMode = this.notebook.id !== "";
-        this.notebookName = this.notebook.name;
+        this.name = this.notebook.name;
+
+        for (let k in this.notebook.tagColors) {
+            let color = this.notebook.tagColors[k];
+            if (!color) color = "";
+
+            this.tagColors.push(new TagColor(k, color));
+        }
+
+        this.checkValid();
     }
 
     getTitle(): string {
@@ -29,13 +47,12 @@ export class EditNotebookDialogComponent implements OnInit {
         return "New notebook";
     }
 
-    onNameLoad(form: NgForm) {
-        if (this.editMode) form.value.name = this.notebook.name;
-        form.value.name = "";
+    onNameInput() {
+        this.checkValid();
     }
 
-    onNameInput(form: NgForm) {
-        const name: string = form.value.name.trim();
+    checkValid() {
+        const name: string = this.name.trim();
         this.valid = name.length > 1 && name.length < 200;
 
         const other = this.notebooks.find(
@@ -45,13 +62,28 @@ export class EditNotebookDialogComponent implements OnInit {
         this.exists = other !== undefined && (!this.editMode || this.notebook.id !== other.id);
     }
 
-    onSubmit(form: NgForm) {
-        if (!form.valid || !this.valid || this.exists) return;
+    onAddTagColorClick() {
+        this.tagColors.push({tag: "", color: ""});
+    }
+
+    onRemoveTagColorClick(i: number) {
+        this.tagColors.splice(i, 1);
+    }
+
+    onAcceptClick() {
+        if (!this.valid || this.exists) return;
 
         const result = new Notebook();
         result.id = this.notebook.id;
-        result.name = form.value.name.trim();
+        result.name = this.name.trim();
 
+        const tagColors: {[tag: string]: string} = {};
+
+        for (let t of this.tagColors) {
+            if (t.color) tagColors[t.tag] = t.color;
+        }
+
+        result.tagColors = tagColors;
         this.modal.close(result);
     }
 }

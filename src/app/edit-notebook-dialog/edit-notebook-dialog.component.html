@@ -2,16 +2,39 @@
     <h5 class="modal-title" id="newNotebookDialogTitle">{{ getTitle() }}</h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
 </div>
-<form (ngSubmit)="onSubmit(form)" #form="ngForm">
-    <div class="modal-body">
-        <div class="form-floating">
-            <input type="text" class="form-control form-control-lg" id="nameInput" name="name" placeholder="name" aria-label="Name" required [(ngModel)]="notebookName" (input)="onNameInput(form)">
-            <label for="nameInput">Name</label>
-        </div>
-        <div *ngIf="exists" id="newNotebookExists" class="alert alert-danger">The notebook already exists</div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" aria-label="Accept" [disabled]="!form.valid || !valid || exists">Accept</button>
-        <button type="button" class="btn btn-secondary" aria-label="Cancel" (click)="modal.dismiss()">Cancel</button>
-    </div>
-</form>
+<div class="modal-body">
+    <input type="text" class="form-control" name="name" placeholder="Name" aria-label="Name" [(ngModel)]="name" (input)="onNameInput()">
+    <div *ngIf="exists" id="errorMessage" class="alert alert-danger">The notebook already exists</div>
+    <table id="colorsTable" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col" class="column1">Tag</th>
+                <th scope="col" class="column2">Color</th>
+                <th scope="col" class="column3">
+                    <button type="button" class="btn btn-outline-secondary" aria-label="Add" (click)="onAddTagColorClick()">
+                        <i class="bi-plus-lg"></i>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of tagColors; index as i;">
+                <td class="column1">
+                    <input type="text" class="form-control" [name]="'tag-' +  i" placeholder="Tag" aria-label="Tag" minlength="1" maxlength="200" [(ngModel)]="c.tag">
+                </td>
+                <td class="column2">
+                    <input type="color" class="form-control colorButton" [name]="'color-' +  i" placeholder="Color" aria-label="Color" [(ngModel)]="c.color">
+                </td>
+                <td class="column3">
+                    <button type="button" class="btn btn-outline-secondary" aria-label="Remove" (click)="onRemoveTagColorClick(i)">
+                        <i class="bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-secondary" aria-label="Accept" [disabled]="!valid || exists" (click)="onAcceptClick()">Accept</button>
+    <button type="button" class="btn btn-secondary" aria-label="Cancel" (click)="modal.dismiss()">Cancel</button>
+</div>

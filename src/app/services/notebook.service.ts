@@ -50,7 +50,23 @@ export class NotebookService {
     private updateNotebooks(user: User | null) {
         if (user) {
             this.getNotebooks().subscribe({
-                next: (notebooks: Notebook[]) => this.notebooks.next(notebooks)
+                next: (notebooks: Notebook[]) => {
+                    this.notebooks.next(notebooks);
+                    const old_cur = this.currentNotebook.value;
+
+                    if (old_cur) {
+                        const new_cur = this.notebooks.value.find((n: Notebook) => n.id === old_cur.id);
+
+                        if (new_cur && (
+                            old_cur.name !== new_cur.name ||
+                            old_cur.tagColors !== new_cur.tagColors ||
+                            old_cur.createdTs !== new_cur.createdTs ||
+                            old_cur.lastModifiedTs !== new_cur.lastModifiedTs
+                        )) {
+                            this.currentNotebook.next(new_cur);
+                        }
+                    }
+                }
             });
         } else {
             this.notebooks.next([]);
