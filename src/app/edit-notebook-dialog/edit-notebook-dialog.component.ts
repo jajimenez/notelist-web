@@ -7,7 +7,7 @@ import { Notebook } from "src/app/models/notebook.model";
 class TagColor {
     constructor(
         public tag: string = "",
-        public color: string | null = null
+        public color: string = ""
     ) {}
 }
 
@@ -63,7 +63,7 @@ export class EditNotebookDialogComponent implements OnInit {
     }
 
     onAddTagColorClick() {
-        this.tagColors.push({tag: "", color: ""});
+        this.tagColors.push({tag: "", color: "#6c757d"});
     }
 
     onRemoveTagColorClick(i: number) {
