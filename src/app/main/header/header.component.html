@@ -17,9 +17,29 @@
                     </button>
                 </li>
                 <li class="nav-item me-4">
-                    <button class="btn btn-outline-light" type="button" aria-label="Sort" [disabled]="notebooks.length === 0">
-                        <i class="bi-sort-down"></i>
-                    </button>
+                    <div ngbDropdown class="d-inline-block">
+                        <button type="button" id="sort-button" class="btn btn-outline-light" ngbDropdownToggle aria-label="Sort" [disabled]="notebooks.length === 0">
+                            <i class="bi-sort-down"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-label="Sort options">
+                            <button ngbDropdownItem (click)="onSortOptionClick(true, false)">
+                                <i class="bi-check-lg" *ngIf="isLastModSortDes()"></i>
+                                <span [ngClass]="{'sortActive': isLastModSortDes(), 'sortInactive': !isLastModSortDes()}">Last modified time, descending</span>
+                            </button>
+                            <button ngbDropdownItem (click)="onSortOptionClick(true, true)">
+                                <i class="bi-check-lg" *ngIf="isLastModSortAsc()"></i>
+                                <span [ngClass]="{'sortActive': isLastModSortAsc(), 'sortInactive': !isLastModSortAsc()}">Last modified time, ascending</span>
+                            </button>
+                            <button ngbDropdownItem (click)="onSortOptionClick(false, false)">
+                                <i class="bi-check-lg" *ngIf="isCreatedSortDes()"></i>
+                                <span [ngClass]="{'sortActive': isCreatedSortDes(), 'sortInactive': !isCreatedSortDes()}">Created time, descending</span>
+                            </button>
+                            <button ngbDropdownItem (click)="onSortOptionClick(false, true)">
+                                <i class="bi-check-lg" *ngIf="isCreatedSortAsc()"></i>
+                                <span [ngClass]="{'sortActive': isCreatedSortAsc(), 'sortInactive': !isCreatedSortAsc()}">Created time, ascending</span>
+                            </button>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item me-4">
                     <button class="btn btn-outline-light" type="button" aria-label="New note" [disabled]="notebooks.length === 0" (click)="onNewNoteClick()">

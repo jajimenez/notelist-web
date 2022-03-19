@@ -27,10 +27,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     menuCollapsed: boolean = true;
     search: string = "";
     searchValid: boolean = false;
+    lastModSort: boolean = false;
+    ascSort: boolean = false;
 
     userSub: Subscription | undefined;
     notebooksSub: Subscription | undefined;
     currentNotebookSub: Subscription | undefined;
+    lastModSortSub: Subscription | undefined;
+    ascSortSub: Subscription | undefined;
 
     constructor(
         private router: Router,
@@ -55,6 +59,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentNotebookSub = this.notebookService.currentNotebook.subscribe({
             next: (notebook: Notebook | null) => this.currentNotebook = notebook
         });
+
+        this.lastModSortSub = this.noteService.lastModSort.subscribe({
+            next: (lastModSort: boolean) => this.lastModSort = lastModSort
+        });
+
+        this.ascSortSub = this.noteService.ascSort.subscribe({
+            next: (asc: boolean) => this.ascSort = asc
+        });
+    }
+
+    isLastModSortAsc() {
+        return this.lastModSort && this.ascSort;
+    }
+
+    isLastModSortDes() {
+        return this.lastModSort && !this.ascSort;
+    }
+
+    isCreatedSortAsc() {
+        return !this.lastModSort && this.ascSort;
+    }
+
+    isCreatedSortDes() {
+        return !this.lastModSort && !this.ascSort;
+    }
+
+    onSortOptionClick(lastMod: boolean, asc: boolean) {
+        this.noteService.lastModSort.next(lastMod);
+        this.noteService.ascSort.next(asc);
+        this.noteService.updateNoteList().subscribe();
     }
 
     toggleMenu() {
@@ -108,5 +142,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.userSub?.unsubscribe();
         this.notebooksSub?.unsubscribe();
         this.currentNotebookSub?.unsubscribe();
+        this.lastModSortSub?.unsubscribe();
+        this.ascSortSub?.unsubscribe();
     }
 }

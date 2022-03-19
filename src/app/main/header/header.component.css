@@ -5,3 +5,11 @@
 a {
     cursor: pointer;
 }
+
+.sortActive {
+    margin-left: 10px;
+}
+
+.sortInactive {
+    margin-left: 26px;
+}

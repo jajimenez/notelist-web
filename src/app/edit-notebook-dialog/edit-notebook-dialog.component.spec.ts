@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EditNotebookDialogComponent } from "./edit-notebook-dialog.component";
 
-describe("NewNotebookDialogComponent", () => {
+describe("EditNotebookDialogComponent", () => {
     let component: EditNotebookDialogComponent;
     let fixture: ComponentFixture<EditNotebookDialogComponent>;
 

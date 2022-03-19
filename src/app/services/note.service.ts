@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, BehaviorSubject, throwError } from "rxjs";
+import { Observable, BehaviorSubject, throwError, Subscriber } from "rxjs";
 import { map, tap, catchError } from "rxjs/operators";
 
 import { environment } from "src/environments/environment";
@@ -58,28 +58,66 @@ export class NoteService {
     currentNotebook: Notebook | null = null;
     notes = new BehaviorSubject<NotePreview[]>([]);
     currentNote = new BehaviorSubject<Note | null>(null);
+    lastModSort = new BehaviorSubject<boolean>(true);
+    ascSort = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient, private authService: AuthService, private notebookService: NotebookService) {
         this.notebookService.currentNotebook.subscribe({
             next: (notebook: Notebook | null) => {
                 this.currentNotebook = notebook;
-                this.updateNoteList();
+                this.updateNoteList().subscribe();
             }
         });
 
         this.notes.subscribe({
             next: (notes: NotePreview[]) => this.updateCurrentNote(notes)
         });
+
+        // Check Local Storage
+        const lastModSortVal = localStorage.getItem("last-mod-sort");
+        const ascSortVal = localStorage.getItem("asc-sort");
+
+        if (lastModSortVal !== null) {
+            const lastModSortData: boolean = JSON.parse(lastModSortVal);
+            this.lastModSort.next(lastModSortData);
+        }
+
+        if (ascSortVal !== null) {
+            const ascSortData: boolean = JSON.parse(ascSortVal);
+            this.ascSort.next(ascSortData);
+        }
+
+        this.lastModSort.subscribe({
+            next: (lastModSort: boolean) => {
+                // Save value to the Local Storage
+                localStorage.setItem("last-mod-sort", JSON.stringify(lastModSort));
+            }
+        });
+
+        this.ascSort.subscribe({
+            next: (ascSort: boolean) => {
+                // Save value to the Local Storage
+                localStorage.setItem("asc-sort", JSON.stringify(ascSort));
+            }
+        });
     }
 
     // Update the note list
-    private updateNoteList() {
+    updateNoteList(): Observable<void> {
         if (this.currentNotebook) {
-            this.getNotebookNotes(this.currentNotebook.id).subscribe({
-                next: (notes: NotePreview[]) => this.notes.next(notes)
-            });
+            return this.getNotebookNotes(this.currentNotebook.id).pipe(
+                tap((notes: NotePreview[]) => this.notes.next(notes)),
+                map(() => {})
+            );
         } else {
-            this.notes.next([]);
+            return new Observable(
+                (subscriber: Subscriber<void>) => {
+                    this.notes.next([]);
+
+                    subscriber.next();
+                    subscriber.complete();
+                }
+            );
         }
     }
 
@@ -94,7 +132,13 @@ export class NoteService {
     // as a header to the request before sending it by the AuthInterceptor service.
     private getNotebookNotes(notebookId: string): Observable<NotePreview[]> {
         const url = environment.notelistApiUrl + "/notes/notes/" + notebookId;
-        const data = {"archived": false};
+
+        const data = {
+            "archived": false,
+            "last_mod": this.lastModSort.value,
+            "asc": this.ascSort.value
+        };
+
         const request = this.http.post<NoteListResponseData>(url, data);
 
         return request.pipe(
@@ -154,7 +198,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNoteList()),
+            tap(() => this.updateNoteList().subscribe()),
             map((d: CreateNoteResponseData) => d.result.id)
         );
     }
@@ -176,7 +220,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNoteList()),
+            tap(() => this.updateNoteList().subscribe()),
             map((d: ResponseData) => undefined)
         );
     }
@@ -188,7 +232,7 @@ export class NoteService {
 
         return request.pipe(
             catchError(e => this.authService.handleError(request, e)),
-            tap(() => this.updateNoteList()),
+            tap(() => this.updateNoteList().subscribe()),
             map((d: ResponseData) => {})
         );
     }
